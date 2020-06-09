@@ -1,1 +1,2 @@
 <!-- {%% } for code block and {{ }} for variables -->
+2. Put repeated section in layout template and use block content.Childs can overwrite blocks.
