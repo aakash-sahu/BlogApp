@@ -1,3 +1,8 @@
 <!-- {%% } for code block and {{ }} for variables -->
 2. Put repeated section in layout template and use block content.Childs can overwrite blocks.
 3. url_for used for static files.
+4. #also need to set a secret key for the cookies
+# In python terminal
+# import secrets
+#>>> secrets.token_hex(16)
+#'656dd199eb5c5c86d449ae28f3d0fcc8' -- can make it env var later
