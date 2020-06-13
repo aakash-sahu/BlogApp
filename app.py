@@ -1,9 +1,39 @@
 from flask import Flask, render_template, url_for, flash, redirect
+from flask_sqlalchemy import SQLAlchemy
 from forms import RegistrationForm, LoginForm
+from datetime import datetime
 
 app = Flask(__name__)
-
 app.config['SECRET_KEY'] = '656dd199eb5c5c86d449ae28f3d0fcc8'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' #/// means relative path
+# set up db with app
+db = SQLAlchemy(app)
+
+## DB models
+class User(db.Model):
+    #add columns for table
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpeg')
+    password = db.Column(db.String(60), nullable=False)
+    ## add post attributes. One to many relationship with posts
+    posts = db.relationship('Post', backref='author', lazy=True) #backref similar to adding another column 'author' at run time to Post table. we also won't see posts column in user. 
+    # Capital Post as it denotes relationship to class Post to get user by using 'author' 'field within Post.
+    #lazy define when sqlA loads data from db and true means it loads in one go.
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) #no () in datetime .always use utc time
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) ## user.id is id of user. lowercase 'u' because we're referencing the table
+
+    def __repr__(self):
+        return f"Post('{self.title}', '{self.date_posted}')"
 
 posts = [
     {

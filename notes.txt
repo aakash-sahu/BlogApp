@@ -6,3 +6,23 @@
 # import secrets
 #>>> secrets.token_hex(16)
 #'656dd199eb5c5c86d449ae28f3d0fcc8' -- can make it env var later
+5. Packages- flask, flask-wtf, email_validator, flask_sqlalchemy
+6. Database - 
+    a. From python cmd line in project folder -from app import db
+    b. db.create_all() -- creates side.db
+    c. use command line to enter data for testing --from app import User, Post
+    d. user_1 = User(username='John', email='jd@email.com', password='password') -- id will be assigned automatically
+    e. db.session.add(user_1) -- can add multiple items in a session. Also add user_2
+    f. db.session.commit() -- to write to db
+    g. User.query.all()  -- to query , User.query.first() --returns a list if multiple items return
+    h. User.query.filter_by(username='John').all()
+    i. user = User.query.filter_by(username='John').first() -- now attributes available e.g. user.id
+    j. user = User.query.get(1) -- get by id
+    k. user.posts -- grabs additional query to get posts from post table for that user
+    l. post_1 = Post(title='Blog 1', content='First Post Content', user_id = user.id)
+    ll. post_2 = Post(title='Blog 2', content='Second Post Content', user_id = user.id)
+    m. db.session.add(post_1); db.session.add(post_2); db.session.commit()
+    n. check user.posts again. can loop through list of results
+    o. post = Post.query.first(); post.user_id;
+    p. run post.author to get full user details.
+    q. drop all tables - db.drop_all(), run db.create_all() to create empty tables again. Check by User.query.all() again.
