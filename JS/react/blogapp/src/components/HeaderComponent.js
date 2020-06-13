@@ -29,6 +29,8 @@ class Header extends Component {
         this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
         this.toggleLoginModal = this.toggleLoginModal.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
+        this.toggleLoginToRegister = this.toggleLoginToRegister.bind(this);
+        this.toggleRegisterToLogin = this.toggleRegisterToLogin.bind(this);
     };
 
     toggleNav() {
@@ -53,7 +55,7 @@ class Header extends Component {
         console.log("Current state: "+JSON.stringify(values));
         alert("Current state: "+JSON.stringify(values));
         // event.preventDefault();
-        this.toggleRegsiterModal();
+        this.toggleRegisterModal();
         //add togglemodal later and also look for a flash message
     };
 
@@ -65,6 +67,15 @@ class Header extends Component {
         //add togglemodal later and also look for a flash message
     };
 
+    toggleLoginToRegister() {
+        this.toggleLoginModal();
+        this.toggleRegisterModal();
+    }
+
+    toggleRegisterToLogin() {
+        this.toggleRegisterModal();
+        this.toggleLoginModal();
+    }
 
     render() {
         return (
@@ -83,14 +94,14 @@ class Header extends Component {
                                 </NavItem>                        
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem>
-                                    <Button outline size="sm" color="light" className="mr-2" onClick={this.toggleLoginModal}>
+                                <NavItem className="mr-2 mt-auto">
+                                    <Button outline size="sm" color="light" onClick={this.toggleLoginModal} >
                                         <span className="fa fa-sign-in"></span> Login
                                     </Button>
                                 </NavItem>
-                                <NavItem>
-                                    <Button outline size="sm" color="light" onClick={this.toggleRegisterModal}
-                                        ><span className="fa fa-circle"></span> Register
+                                <NavItem className="mr-2 mt-1">
+                                    <Button outline size="sm" color="light" onClick={this.toggleRegisterModal} className="mt-auto">
+                                        <span className="fa fa-circle"></span> Register
                                     </Button>
                                 </NavItem>                        
                             </Nav>                    
@@ -155,13 +166,18 @@ class Header extends Component {
                                                    } />
                                             {errors.confirmPassword && touched.confirmPassword && (<div className="invalid-feedback">{errors.confirmPassword}</div>)}
                                         </FormGroup>
-                                            <Button type="button" outline color="primary" onClick={handleReset} disabled={isSubmitting}>Reset</Button> {'   '}
+                                            <Button type="button" outline color="secondary" onClick={handleReset} disabled={isSubmitting}>Reset</Button> {'   '}
                                             <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Register</Button>
                                     </Form>
                                 )
                             } 
                             }
                         </Formik>
+                        <div className="border-top pt-3 mb-3">
+                            <small className="text-muted">Already have an account?
+                                <a onClick={this.toggleRegisterToLogin} className="ml-2 text-info">Sign In here</a>
+                            </small>
+                        </div>
                     </ModalBody>
                 </Modal>
                 {/* Register form ends */}
@@ -212,6 +228,11 @@ class Header extends Component {
                             } 
                             }
                         </Formik>
+                        <div className="border-top pt-3 mb-3">
+                            <small className="text-muted">Don't have an account?  
+                                <a onClick={this.toggleLoginToRegister} className="ml-2 text-info">Register Here</a>
+                            </small>
+                        </div>
                     </ModalBody>
                 </Modal>
                 {/* Login form ends */}
