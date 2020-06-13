@@ -26,3 +26,6 @@
     o. post = Post.query.first(); post.user_id;
     p. run post.author to get full user details.
     q. drop all tables - db.drop_all(), run db.create_all() to create empty tables again. Check by User.query.all() again.
+7. Turn application into package to resolve the import issues by creating __init__.py file and cleaning up the imports.
+    7.1. This avoids the problem of circular imports.
+    7.2 Create the db again from within python terminal - from app import db; from app.models import User, Post;db.create_all()
