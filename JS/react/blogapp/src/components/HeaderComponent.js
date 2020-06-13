@@ -11,16 +11,24 @@ const RegisterValidateSchema = Yup.object().shape({
     confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], "Passwords should match").required("Required").min(2),
 });
 
+const LoginValidateSchema = Yup.object().shape({
+    email: Yup.string().email("Email should be a valid email").required("Email is required"),
+    password: Yup.string().required("Password is required").min(2, "Password should be atleast 2 characters"),
+});
+
 class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isNavOpen: false,
-            isRegisterModalOpen: false
+            isRegisterModalOpen: false,
+            isLoginModalOpen: false,
         };
         this.toggleNav = this.toggleNav.bind(this);
-        this.toggleRegsiterModal = this.toggleRegsiterModal.bind(this);
+        this.toggleRegisterModal = this.toggleRegisterModal.bind(this);
         this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
+        this.toggleLoginModal = this.toggleLoginModal.bind(this);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     };
 
     toggleNav() {
@@ -28,18 +36,35 @@ class Header extends Component {
             isNavOpen: !this.state.isNavOpen
         });
     }
-    toggleRegsiterModal() {
+
+    toggleRegisterModal() {
         this.setState({
             isRegisterModalOpen: !this.state.isRegisterModalOpen
-        })
-    }
-    handleRegisterSubmit(values, actions, event) {
+        });
+    };
+    
+    toggleLoginModal() {
+        this.setState({
+            isLoginModalOpen: !this.state.isLoginModalOpen
+        });
+    };
+
+    handleRegisterSubmit(values, actions) {
         console.log("Current state: "+JSON.stringify(values));
         alert("Current state: "+JSON.stringify(values));
         // event.preventDefault();
         this.toggleRegsiterModal();
         //add togglemodal later and also look for a flash message
-    }
+    };
+
+    handleLoginSubmit(values, actions) {
+        console.log("Current state: "+JSON.stringify(values));
+        alert("Current state: "+JSON.stringify(values));
+        // event.preventDefault();
+        // this.toggleLoginModal();
+        //add togglemodal later and also look for a flash message
+    };
+
 
     render() {
         return (
@@ -59,10 +84,12 @@ class Header extends Component {
                             </Nav>
                             <Nav className="ml-auto" navbar>
                                 <NavItem>
-                                    <Button outline size="sm" color="light" className="mr-2"><span className="fa fa-sign-in"></span> Login</Button>
+                                    <Button outline size="sm" color="light" className="mr-2" onClick={this.toggleLoginModal}>
+                                        <span className="fa fa-sign-in"></span> Login
+                                    </Button>
                                 </NavItem>
                                 <NavItem>
-                                    <Button outline size="sm" color="light" onClick={this.toggleRegsiterModal}
+                                    <Button outline size="sm" color="light" onClick={this.toggleRegisterModal}
                                         ><span className="fa fa-circle"></span> Register
                                     </Button>
                                 </NavItem>                        
@@ -70,8 +97,9 @@ class Header extends Component {
                         </Collapse>
                     </div>
                 </Navbar>
-                <Modal isOpen={this.state.isRegisterModalOpen} toggle={this.toggleRegsiterModal} className="modal-lg">
-                    <ModalHeader className="border-bottom" toggle={this.toggleRegsiterModal}>Register</ModalHeader>
+                {/* Register form */}
+                <Modal isOpen={this.state.isRegisterModalOpen} toggle={this.toggleRegisterModal} className="modal-lg">
+                    <ModalHeader className="border-bottom" toggle={this.toggleRegisterModal}>Register</ModalHeader>
                     <ModalBody>
                         <Formik
                             initialValues={{ username: "", email:"", password:"", confirmPassword:""}}
@@ -131,13 +159,62 @@ class Header extends Component {
                                             <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Register</Button>
                                     </Form>
                                 )
+                            } 
                             }
-                            
-                            }
-                            
                         </Formik>
                     </ModalBody>
                 </Modal>
+                {/* Register form ends */}
+                {/* Login form */}
+                <Modal isOpen={this.state.isLoginModalOpen} toggle={this.toggleLoginModal}>
+                    <ModalHeader className="border-bottom" toggle={this.toggleLoginModal}>Login</ModalHeader>
+                    <ModalBody>
+                        <Formik
+                            initialValues={{  email:"", password:""}}
+                            onSubmit={this.handleLoginSubmit} 
+                            validationSchema={LoginValidateSchema} >
+                            {(props) => {
+                                const {
+                                    values,
+                                    touched,
+                                    errors,
+                                    // dirty,
+                                    handleChange,
+                                    handleBlur,
+                                    handleSubmit,
+                                    handleReset,
+                                    isSubmitting
+                                } = props;
+                                return (
+                                    <Form className="m-2" onSubmit={handleSubmit}>
+                                        <FormGroup>
+                                            <Label htmlFor="email">Email</Label>
+                                            <Input type="email" id="email" name="email" placeholder="Email" 
+                                                value = {values.email} onChange={handleChange} onBlur={handleBlur} 
+                                                className={ 
+                                                       errors.email && touched.email ? "is-invalid":""
+                                                   }/>
+                                            {errors.email && touched.email && (<div className="invalid-feedback">{errors.email}</div>)}
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <Label htmlFor="password">Password</Label>
+                                            <Input type="password" id="password" name="password" placeholder="Password" 
+                                                value = {values.password} onChange={handleChange} onBlur={handleBlur} 
+                                                className={ 
+                                                       errors.password && touched.password ? "is-invalid":""
+                                                   }/>
+                                            {errors.password && touched.password && (<div className="invalid-feedback">{errors.password}</div>)}
+                                        </FormGroup>
+                                            <Button type="button" outline color="secondary" onClick={handleReset} disabled={isSubmitting} className="mr-1">Reset</Button>
+                                            <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Login</Button>
+                                    </Form>
+                                )
+                            } 
+                            }
+                        </Formik>
+                    </ModalBody>
+                </Modal>
+                {/* Login form ends */}
             </React.Fragment>
         );
     }
