@@ -15,11 +15,11 @@ var postSchema = new Schema({
     image:{
         type:String,
         default: 'default.jpeg'
-    },
-    posts = [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'User'
-    }]
+    }
+    // posts = [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref:'User'
+    // }]
 }, {timestamps:true}
 );
 

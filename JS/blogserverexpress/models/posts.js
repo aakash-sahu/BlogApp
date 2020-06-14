@@ -12,11 +12,13 @@ const postSchema = new Schema({
         required:true
     },
     author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type: String // mongoose.Schema.Types.ObjectId,
+        //ref: 'User'
     }
 }, {
-    timestamps:true
+    timestamps:{ 
+        createdAt: 'datePosted'
+    }
 });
 
 var Posts = mongoose.model('Post', postSchema);
