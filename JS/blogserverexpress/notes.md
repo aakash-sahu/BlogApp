@@ -8,3 +8,4 @@
         "title": "Blog Post 2",
         "content": "Second post content"
         }
+8. Add nodemon to restart server when files change and add nodemon in start script. npm install -g nodemon

@@ -14,7 +14,7 @@ var postSchema = new Schema({
     },
     image:{
         type:String,
-        default: 'default.jpeg'
+        default: 'default.jpg'
     }
     // posts = [{
     //     type: mongoose.Schema.Types.ObjectId,

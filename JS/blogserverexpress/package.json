@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set DEBUG=blogserverexpress:* & node ./bin/www"
+    "start": "set DEBUG=blogserverexpress:* & nodemon ./bin/www"
   },
   "dependencies": {
     "assert": "^2.0.0",
