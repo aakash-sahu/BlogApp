@@ -5,12 +5,12 @@ function Home(props)  {
 
     const posts = props.posts.map((post) => {
         return (
-            <article key={post.id} className="content-section">
+            <article key={post._id} className="content-section">
                 <Media>
                     <Media body>
                         <div className="article-metadata">
                             <a className="mr-2" href="#">{post.author}</a>
-                            <small className="text-muted">{post.date_posted}</small>
+                            <small className="text-muted">{post.datePosted}</small>
                         </div>
                         <h2><a className="text-dark article-title" href="#">{post.title}</a></h2>
                         <p className="article-content">{post.content}</p>

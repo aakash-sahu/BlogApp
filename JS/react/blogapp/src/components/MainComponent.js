@@ -4,14 +4,20 @@ import Header from './HeaderComponent';
 import About from './AboutComponent';
 import Home from './HomeComponent';
 import { connect } from 'react-redux';
+import { fetchPosts } from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => ({
     posts: state.posts
-})
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    fetchPosts: () => {dispatch(fetchPosts())}
+});
 
 class Main extends Component {
-    constructor(props) {
-        super(props);
+
+    componentDidMount() {
+        this.props.fetchPosts();
     }
 
     render () {
@@ -28,4 +34,4 @@ class Main extends Component {
     }
 }
 
-export default withRouter((connect(mapStateToProps)(Main)));
+export default withRouter((connect(mapStateToProps, mapDispatchToProps)(Main)));
