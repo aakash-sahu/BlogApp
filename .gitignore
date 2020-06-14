@@ -1,3 +1,4 @@
 .vscode
 JS
 __pycache__
+app/site.db
