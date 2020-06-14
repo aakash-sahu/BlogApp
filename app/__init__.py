@@ -11,6 +11,7 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login' # set as function name of login route
+login_manager.login_message_category = 'info' ##make the login message better with bootstrap class
 
 # Routes need to be imported so app can find them when running the application
 # Put routes import here to avoid circular import??
