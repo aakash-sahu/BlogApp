@@ -1,8 +1,14 @@
 from datetime import datetime
-from app import db
+from app import db, login_manager
+from flask_login import UserMixin #this adds isauthenticated, isactive and other methods to us
+
+# for login as per documentation of login_manager
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 ## DB models
-class User(db.Model):
+class User(db.Model, UserMixin):
     #add columns for table
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
