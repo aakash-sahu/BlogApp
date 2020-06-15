@@ -4,14 +4,18 @@ import Header from './HeaderComponent';
 import About from './AboutComponent';
 import Home from './HomeComponent';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../redux/ActionCreators';
+import { fetchPosts, registerUser } from '../redux/ActionCreators';
 
-const mapStateToProps = (state) => ({
-    posts: state.posts
-});
+const mapStateToProps = state => {
+    return {
+    posts: state.posts,
+    registration: state.registration
+    }
+};
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchPosts: () => {dispatch(fetchPosts())}
+    fetchPosts: () => {dispatch(fetchPosts())},
+    registerUser: (registerCreds) => dispatch(registerUser(registerCreds)) 
 });
 
 class Main extends Component {
@@ -23,9 +27,9 @@ class Main extends Component {
     render () {
         return (
             <div>
-                <Header />
+                <Header registerUser = {this.props.registerUser}/>
                 <Switch>
-                    <Route path='/home' component = {() => <Home posts = {this.props.posts} />}/>
+                    <Route path='/home' component = {() => <Home posts = {this.props.posts.posts} />}/>
                     <Route path='/about' component= {About} />
                     <Redirect to="/home" />
                 </Switch>

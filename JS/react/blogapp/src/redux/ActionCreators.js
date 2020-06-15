@@ -34,3 +34,30 @@ export const postsFailed = (errmess) => ({
     type: ActionTypes.POSTS_FAILED,
     payload: errmess
 });
+
+//user registration
+
+export const registerUser = (registerCreds) => (dispatch) => {
+
+    return fetch(baseUrl +'users/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body : JSON.stringify(registerCreds)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response
+        }
+        else {
+            console.log(response.json());
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+    }, error => { throw error})
+    .then(response => response.json())
+    // .then(response => console.log(response))
+    .catch(error => {console.log(error)})
+};

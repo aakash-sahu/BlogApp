@@ -52,16 +52,17 @@ class Header extends Component {
     };
 
     handleRegisterSubmit(values, actions) {
-        console.log("Current state: "+JSON.stringify(values));
-        alert("Current state: "+JSON.stringify(values));
+        console.log("Register user state: "+JSON.stringify(values));
+        // alert("Register user: "+JSON.stringify(values));
         // event.preventDefault();
         this.toggleRegisterModal();
+        this.props.registerUser({username: values.username, email: values.email, password: values.password });
         //add togglemodal later and also look for a flash message
     };
 
     handleLoginSubmit(values, actions) {
-        console.log("Current state: "+JSON.stringify(values));
-        alert("Current state: "+JSON.stringify(values));
+        console.log("Login user state: "+JSON.stringify(values));
+        // alert("Login user: "+JSON.stringify(values));
         // event.preventDefault();
         // this.toggleLoginModal();
         //add togglemodal later and also look for a flash message

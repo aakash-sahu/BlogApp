@@ -10,7 +10,7 @@ function Home(props)  {
                     <Media body>
                         <div className="article-metadata">
                             <a className="mr-2" href="#">{post.author}</a>
-                            <small className="text-muted">{post.datePosted}</small>
+                            <small className="text-muted">{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(post.datePosted)))}</small>
                         </div>
                         <h2><a className="text-dark article-title" href="#">{post.title}</a></h2>
                         <p className="article-content">{post.content}</p>
