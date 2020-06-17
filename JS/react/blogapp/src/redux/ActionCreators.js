@@ -1,4 +1,5 @@
 import * as ActionTypes from './ActionTypes';
+import Cookies from 'js-cookie';
 
 import { baseUrl } from '../shared/baseUrl';
 
@@ -36,6 +37,11 @@ export const postsFailed = (errmess) => ({
 });
 
 //user registration
+export const registerSuccess = (response) => {
+    return {
+        type: ActionTypes.REGISTER_USER
+    }
+};
 
 export const registerUser = (registerCreds) => (dispatch) => {
 
@@ -58,6 +64,98 @@ export const registerUser = (registerCreds) => (dispatch) => {
         }
     }, error => { throw error})
     .then(response => response.json())
-    // .then(response => console.log(response))
+    .then(response => dispatch(registerSuccess(response)))
     .catch(error => {console.log(error)})
 };
+
+
+//user login
+export const loginRequest = (loginCreds) => {
+    return {
+        type: ActionTypes.LOGIN_REQUEST,
+        loginCreds
+    }
+};
+
+export const loginSuccess = () => {
+    return {
+        type: ActionTypes.LOGIN_SUCCESS
+    }
+};
+
+export const loginFailed = (message) => {
+    return {
+        type: ActionTypes.LOGIN_FAILED,
+        message
+    }
+};
+
+export const loginUser = (loginCreds) => (dispatch) => {
+    
+    dispatch(loginRequest(loginCreds));
+
+    return fetch(baseUrl +'users/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body : JSON.stringify(loginCreds)
+    })
+    // .then(response => {
+    //     if (response.ok) {
+    //         return response
+    //     }
+    //     // else {
+    //     //     console.log("Response not ok with message: ", response);
+    //     //     response.json().then((response) =>{dispatch(loginFailed(response)) })
+    //     //     // console.log(response.json());
+    //     //     // var error = new Error('Error ' + response.status + ': ' + response.statusText);
+    //     //     // error.response = response;
+    //     //     // throw error;
+    //     // }
+    // }, error => { throw error})
+    .then(response => response.json())
+    .then(response => {
+        if (response.success){
+            localStorage.setItem('user', JSON.stringify(loginCreds.username));
+            dispatch(loginSuccess(response))
+            console.log("Login success with response: ", response);
+        }
+        else {
+            dispatch(loginFailed(response)); 
+            console.log("Login failed with response: ", response);
+            // var error = new Error('Error: '+ response.status);
+            // error.message = response;
+            // throw error;
+        }
+    })
+    // .catch(error => {dispatch(loginFailed(error.response));console.log(error.message)});
+    .catch((error) => console.log(error))
+};
+
+//user logout
+export const logoutRequest = () => {
+    return {
+        type: ActionTypes.LOGOUT_REQUEST
+    }
+};
+
+export const logoutSuccess = () => {
+    return {
+        type: ActionTypes.LOGOUT_SUCCESS
+    }
+};
+
+export const logoutFailed = (message) => {
+    return {
+        type: ActionTypes.LOGOUT_FAILED,
+        message
+    }
+};
+
+export const logoutUser = () => (dispatch) => {
+    dispatch(logoutRequest);
+    Cookies.remove('session-id');
+    localStorage.removeItem('user');
+    dispatch(logoutSuccess())
+}

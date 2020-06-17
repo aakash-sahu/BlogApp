@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, NavbarBrand, NavItem, NavLink, Nav, NavbarToggler, Collapse, Button, Modal, ModalBody, ModalHeader,
-        FormGroup, Label, Input, Form  } from 'reactstrap';
+        FormGroup, Label, Input, Form, Alert  } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -12,7 +12,8 @@ const RegisterValidateSchema = Yup.object().shape({
 });
 
 const LoginValidateSchema = Yup.object().shape({
-    email: Yup.string().email("Email should be a valid email").required("Email is required"),
+    username: Yup.string().required("Name is required").min(2,"Name should be between 2-20 characters").max(20,"Name should be between 2-20 characters"),
+    // email: Yup.string().email("Email should be a valid email").required("Email is required"),
     password: Yup.string().required("Password is required").min(2, "Password should be atleast 2 characters"),
 });
 
@@ -31,6 +32,7 @@ class Header extends Component {
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.toggleLoginToRegister = this.toggleLoginToRegister.bind(this);
         this.toggleRegisterToLogin = this.toggleRegisterToLogin.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
     };
 
     toggleNav() {
@@ -60,11 +62,23 @@ class Header extends Component {
         //add togglemodal later and also look for a flash message
     };
 
-    handleLoginSubmit(values, actions) {
+    async handleLoginSubmit(values, actions) {
         console.log("Login user state: "+JSON.stringify(values));
         // alert("Login user: "+JSON.stringify(values));
         // event.preventDefault();
-        // this.toggleLoginModal();
+        await this.props.loginUser({username: values.username, password: values.password });
+        if (!this.props.login.isAuthenticated) {
+            console.log(this.props.login.isAuthenticated);
+            console.log(this.props.login.errMess.err);
+            actions.setStatus(undefined);
+            actions.setStatus({
+                'username': this.props.login.errMess.err 
+            });
+            // console.log(status)
+        }
+        else {
+            this.toggleLoginModal();
+        }
         //add togglemodal later and also look for a flash message
     };
 
@@ -76,6 +90,10 @@ class Header extends Component {
     toggleRegisterToLogin() {
         this.toggleRegisterModal();
         this.toggleLoginModal();
+    }
+
+    handleLogout() {
+        this.props.logoutUser();
     }
 
     render() {
@@ -95,16 +113,25 @@ class Header extends Component {
                                 </NavItem>                        
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem className="mr-2 mt-auto">
-                                    <Button outline size="sm" color="light" onClick={this.toggleLoginModal} >
-                                        <span className="fa fa-sign-in"></span> Login
-                                    </Button>
-                                </NavItem>
-                                <NavItem className="mr-2 mt-1">
-                                    <Button outline size="sm" color="light" onClick={this.toggleRegisterModal} className="mt-auto">
-                                        <span className="fa fa-circle"></span> Register
-                                    </Button>
-                                </NavItem>                        
+                                {this.props.login.isAuthenticated ? 
+                                    <NavItem className="mr-2 mt-auto">
+                                        <div className="navbar-text mr-3">{this.props.login.user.replace(/^"(.+(?="$))"$/, '$1')}</div>
+                                        <Button outline size="sm" color="light" onClick={this.handleLogout} >
+                                            <span className="fa fa-sign-out"></span> Logout
+                                        </Button>
+                                    </NavItem>
+                                    :
+                                    <span>
+                                        <NavItem className="mr-2 mt-auto">
+                                            <Button outline size="sm" color="light" onClick={this.toggleLoginModal} className="mt-auto mr-2" >
+                                                <span className="fa fa-sign-in"></span> Login
+                                            </Button>
+                                            <Button outline size="sm" color="light" onClick={this.toggleRegisterModal} className="mt-auto m-auto">
+                                                <span className="fa fa-circle"></span> Register
+                                            </Button>
+                                        </NavItem> 
+                                    </span>
+                                }                       
                             </Nav>                    
                         </Collapse>
                     </div>
@@ -187,7 +214,8 @@ class Header extends Component {
                     <ModalHeader className="border-bottom" toggle={this.toggleLoginModal}>Login</ModalHeader>
                     <ModalBody>
                         <Formik
-                            initialValues={{  email:"", password:""}}
+                        //Change to username now to test
+                            initialValues={{  username:"", password:""}}
                             onSubmit={this.handleLoginSubmit} 
                             validationSchema={LoginValidateSchema} >
                             {(props) => {
@@ -200,18 +228,19 @@ class Header extends Component {
                                     handleBlur,
                                     handleSubmit,
                                     handleReset,
-                                    isSubmitting
+                                    isSubmitting,
+                                    status
                                 } = props;
                                 return (
                                     <Form className="m-2" onSubmit={handleSubmit}>
                                         <FormGroup>
-                                            <Label htmlFor="email">Email</Label>
-                                            <Input type="email" id="email" name="email" placeholder="Email" 
-                                                value = {values.email} onChange={handleChange} onBlur={handleBlur} 
+                                            <Label htmlFor="username">Username</Label>
+                                            <Input type="text" id="username" name="username" placeholder="Username" 
+                                                value = {values.username} onChange={handleChange} onBlur={handleBlur} 
                                                 className={ 
-                                                       errors.email && touched.email ? "is-invalid":""
+                                                       errors.username && touched.username ? "is-invalid":""
                                                    }/>
-                                            {errors.email && touched.email && (<div className="invalid-feedback">{errors.email}</div>)}
+                                            {errors.username && touched.username && (<div className="invalid-feedback">{errors.username}</div>)}
                                         </FormGroup>
                                         <FormGroup>
                                             <Label htmlFor="password">Password</Label>
@@ -222,6 +251,9 @@ class Header extends Component {
                                                    }/>
                                             {errors.password && touched.password && (<div className="invalid-feedback">{errors.password}</div>)}
                                         </FormGroup>
+                                        {/* className="invalid-feedback" */}
+                                        {/* <div ><p>API error: {status.username}</p></div>  */}
+                                        {status && status.username ? (<div><Alert color="danger">{status.username}</Alert></div>) : <div></div>}
                                             <Button type="button" outline color="secondary" onClick={handleReset} disabled={isSubmitting} className="mr-1">Reset</Button>
                                             <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Login</Button>
                                     </Form>

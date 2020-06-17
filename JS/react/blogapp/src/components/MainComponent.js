@@ -4,18 +4,21 @@ import Header from './HeaderComponent';
 import About from './AboutComponent';
 import Home from './HomeComponent';
 import { connect } from 'react-redux';
-import { fetchPosts, registerUser } from '../redux/ActionCreators';
+import { fetchPosts, registerUser, loginUser, logoutUser } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
     posts: state.posts,
-    registration: state.registration
+    registration: state.registration,
+    login: state.login
     }
 };
 
 const mapDispatchToProps = (dispatch) => ({
     fetchPosts: () => {dispatch(fetchPosts())},
-    registerUser: (registerCreds) => dispatch(registerUser(registerCreds)) 
+    registerUser: (registerCreds) => dispatch(registerUser(registerCreds)) ,
+    loginUser: (loginCreds) => dispatch(loginUser(loginCreds)),
+    logoutUser: () => dispatch(logoutUser())
 });
 
 class Main extends Component {
@@ -27,7 +30,7 @@ class Main extends Component {
     render () {
         return (
             <div>
-                <Header registerUser = {this.props.registerUser}/>
+                <Header registerUser = {this.props.registerUser} loginUser = {this.props.loginUser} login = {this.props.login} logoutUser = {this.props.logoutUser} />
                 <Switch>
                     <Route path='/home' component = {() => <Home posts = {this.props.posts.posts} />}/>
                     <Route path='/about' component= {About} />

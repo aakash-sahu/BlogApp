@@ -6,5 +6,6 @@ var User = require('./models/users');
 //passport.use(User.createStrategy()); try this later for above
 // and serialize deserealize user for maintaining sessions
 exports.local = passport.use(new LocalStrategy(User.authenticate()));
+console.log("is error happening here?")
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
