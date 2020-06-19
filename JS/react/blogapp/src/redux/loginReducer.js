@@ -26,7 +26,8 @@ export const Login = (state = {
         return {...state,
             isLoading: false,
             isAuthenticated: false,
-            errMess: action.message
+            errMess: action.message,
+            user: ''
             }
             case ActionTypes.LOGOUT_REQUEST: {
                 return {...state, 

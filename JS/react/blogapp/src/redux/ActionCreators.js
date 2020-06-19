@@ -40,6 +40,14 @@ export const postsFailed = (errmess) => ({
 export const registerSuccess = (response) => {
     return {
         type: ActionTypes.REGISTER_USER
+        
+    }
+};
+
+export const registerFailed = (err) => {
+    return {
+        type: ActionTypes.REGISTER_FAIL,
+        err
     }
 };
 
@@ -52,20 +60,38 @@ export const registerUser = (registerCreds) => (dispatch) => {
         },
         body : JSON.stringify(registerCreds)
     })
+    // .then(response => {
+    //     if (response.ok) {
+    //         response.json().then((response) => dispatch(registerSuccess(response)))
+    //     }
+    //     else {
+
+    //         if (response.status === 403) {
+    //             response.json().then((response) => {dispatch(registerFailed(response.err))} )  //console.log(response.err);
+    //         } 
+    //         else {
+    //             console.log(response);
+    //             var error = new Error('Error ' + response.status + ': ' + response.statusText);
+    //             error.response = response;
+    //             throw error;
+    //         }
+    //     }
+    // }, error => { throw error})
+    .then(response => response.json())
     .then(response => {
-        if (response.ok) {
-            return response
+        if (response.success){
+            dispatch(registerSuccess(response))
+            console.log("Register success with response: ", response);
         }
         else {
-            console.log(response.json());
-            var error = new Error('Error ' + response.status + ': ' + response.statusText);
-            error.response = response;
-            throw error;
+            dispatch(registerFailed(response.err)); 
+            console.log("Login failed with response: ", response);
+            // var error = new Error('Error: '+ response.status);
+            // error.message = response;
+            // throw error;
         }
-    }, error => { throw error})
-    .then(response => response.json())
-    .then(response => dispatch(registerSuccess(response)))
-    .catch(error => {console.log(error)})
+    })
+    .catch(error => {console.log(error); dispatch(registerFailed(error))})
 };
 
 
@@ -90,6 +116,7 @@ export const loginFailed = (message) => {
     }
 };
 
+//doesn't handle all erros. for e.g. when server is down.
 export const loginUser = (loginCreds) => (dispatch) => {
     
     dispatch(loginRequest(loginCreds));
@@ -130,7 +157,7 @@ export const loginUser = (loginCreds) => (dispatch) => {
         }
     })
     // .catch(error => {dispatch(loginFailed(error.response));console.log(error.message)});
-    .catch((error) => console.log(error))
+    .catch((error) => dispatch(loginFailed(error)) ) //console.log("Catch error: ",error)
 };
 
 //user logout

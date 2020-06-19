@@ -30,7 +30,8 @@ class Main extends Component {
     render () {
         return (
             <div>
-                <Header registerUser = {this.props.registerUser} loginUser = {this.props.loginUser} login = {this.props.login} logoutUser = {this.props.logoutUser} />
+                <Header registerUser = {this.props.registerUser} registration = {this.props.registration}
+                loginUser = {this.props.loginUser} login = {this.props.login} logoutUser = {this.props.logoutUser}/>
                 <Switch>
                     <Route path='/home' component = {() => <Home posts = {this.props.posts.posts} />}/>
                     <Route path='/about' component= {About} />

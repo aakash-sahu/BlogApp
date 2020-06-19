@@ -11,22 +11,25 @@ usersRouter.use(bodyParser.json());
 
 /* Work on get later */
 usersRouter.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.end('respond with a resource');
 });
 
 usersRouter.post('/register', (req, res, next) => {
   var newUser = new User({username: req.body.username, email: req.body.email});
   User.register(newUser, req.body.password, (err, user) => {
       if(err){
-        res.statusCode = 500;
+        res.statusCode = 403;
         res.setHeader("Content-Type", "application/json");
         res.json({success:false, status: 'Registration not successful!', err:err});
       }
-        passport.authenticate('local')(req, res, () => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json({success:true, status: 'Registration successful!', username: user.username});
-          })
+      else {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json({success:true, status: 'Registration successful!', username: user.username});
+      }
+        // passport.authenticate('local')(req, res, () => {
+
+        //   })
       })
 });
 

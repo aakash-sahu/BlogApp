@@ -53,26 +53,39 @@ class Header extends Component {
         });
     };
 
-    handleRegisterSubmit(values, actions) {
+   async handleRegisterSubmit(values, actions) {
         console.log("Register user state: "+JSON.stringify(values));
         // alert("Register user: "+JSON.stringify(values));
         // event.preventDefault();
-        this.toggleRegisterModal();
-        this.props.registerUser({username: values.username, email: values.email, password: values.password });
+        
+        await this.props.registerUser({username: values.username, email: values.email, password: values.password });
+        console.log("register success", this.props.registration.registerSuccess);
+        if (!this.props.registration.registerSuccess){
+            actions.setStatus(undefined);
+            actions.setStatus({
+                'username': this.props.registration.errMess
+            });
+        }
+        else {
+            this.toggleRegisterModal();
+        }
+        // console.log(this.props.registration.registerSuccess);
+        // console.log(this.props.login.errMess);
         //add togglemodal later and also look for a flash message
     };
-
+    
+    //Handle submit - //doesn't handle all erros. for e.g. when server is down.
     async handleLoginSubmit(values, actions) {
         console.log("Login user state: "+JSON.stringify(values));
         // alert("Login user: "+JSON.stringify(values));
         // event.preventDefault();
         await this.props.loginUser({username: values.username, password: values.password });
         if (!this.props.login.isAuthenticated) {
-            console.log(this.props.login.isAuthenticated);
-            console.log(this.props.login.errMess.err);
+            // console.log(this.props.login.isAuthenticated);
+            // console.log(this.props.login.errMess.err);
             actions.setStatus(undefined);
             actions.setStatus({
-                'username': this.props.login.errMess.err 
+                'username': this.props.login.errMess.err    //change in both handles to use other than username
             });
             // console.log(status)
         }
@@ -154,7 +167,8 @@ class Header extends Component {
                                     handleBlur,
                                     handleSubmit,
                                     handleReset,
-                                    isSubmitting
+                                    isSubmitting,
+                                    status
                                 } = props;
                                 return (
                                     <Form className="m-4" onSubmit={handleSubmit}>
@@ -194,6 +208,7 @@ class Header extends Component {
                                                    } />
                                             {errors.confirmPassword && touched.confirmPassword && (<div className="invalid-feedback">{errors.confirmPassword}</div>)}
                                         </FormGroup>
+                                        {status && status.username ? (<div><Alert color="danger">{status.username}</Alert></div>) : <div></div>}
                                             <Button type="button" outline color="secondary" onClick={handleReset} disabled={isSubmitting}>Reset</Button> {'   '}
                                             <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Register</Button>
                                     </Form>
@@ -203,7 +218,7 @@ class Header extends Component {
                         </Formik>
                         <div className="border-top pt-3 mb-3">
                             <small className="text-muted">Already have an account?
-                                <a onClick={this.toggleRegisterToLogin} className="ml-2 text-info">Sign In here</a>
+                                <button type="button" onClick={this.toggleRegisterToLogin} className="ml-2 btn btn-link">Sign In here</button>
                             </small>
                         </div>
                     </ModalBody>
@@ -251,8 +266,6 @@ class Header extends Component {
                                                    }/>
                                             {errors.password && touched.password && (<div className="invalid-feedback">{errors.password}</div>)}
                                         </FormGroup>
-                                        {/* className="invalid-feedback" */}
-                                        {/* <div ><p>API error: {status.username}</p></div>  */}
                                         {status && status.username ? (<div><Alert color="danger">{status.username}</Alert></div>) : <div></div>}
                                             <Button type="button" outline color="secondary" onClick={handleReset} disabled={isSubmitting} className="mr-1">Reset</Button>
                                             <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Login</Button>
@@ -263,7 +276,7 @@ class Header extends Component {
                         </Formik>
                         <div className="border-top pt-3 mb-3">
                             <small className="text-muted">Don't have an account?  
-                                <a onClick={this.toggleLoginToRegister} className="ml-2 text-info">Register Here</a>
+                                <button onClick={this.toggleLoginToRegister} className="btn btn-link">Register Here</button>
                             </small>
                         </div>
                     </ModalBody>
