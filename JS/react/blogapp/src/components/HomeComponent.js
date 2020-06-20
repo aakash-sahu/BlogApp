@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
-import { Media, Card,CardBody, CardHeader,CardText, ListGroup, ListGroupItem, Alert, UncontrolledAlert  } from 'reactstrap';
+import { Media, Card,CardBody, CardHeader,CardText, ListGroup, ListGroupItem, Alert  } from 'reactstrap';
 
-function Home(props)  {
+class Home extends Component  {
+    // constructor(props) {
+    //     super(props);
+    // };
 
-    const posts = props.posts.map((post) => {
+    componentDidMount() {
+        // console.log('dismiss alert function', this.props.alertState.visible);
+        if (this.props.alertState.visible)
+            setTimeout(this.props.dismissAlert, 5000);
+    };    
+
+    render () {
+    const posts = this.props.posts.map((post) => {
         return (
             <article key={post._id} className="content-section">
                 <Media>
@@ -22,10 +32,10 @@ function Home(props)  {
 
     return (
         <main className="container">
-            {props.alertState.visible ? (<div className = "row">
+            {this.props.alertState.visible ? (<div className = "row">
                 <div className= "col-12"> 
-                    <Alert  color={props.alertState.category} visible={props.alertState.visible.toString()} toggle={props.dismissAlert}>
-                        {props.alertState.message }
+                    <Alert  color={this.props.alertState.category} visible={this.props.alertState.visible.toString()} toggle={this.props.dismissAlert}>
+                        {this.props.alertState.message }
                     </Alert >
                 </div>             
             </div>)
@@ -51,8 +61,8 @@ function Home(props)  {
                 </div>
             </div>
         </main>
-
     );
+    }
 }
 
 export default Home;

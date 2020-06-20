@@ -108,8 +108,9 @@ class Header extends Component {
         this.toggleLoginModal();
     }
 
-    handleLogout() {
-        this.props.logoutUser();
+    async handleLogout() {
+       await this.props.logoutUser();
+        this.props.showAlert("success", "You are successfully logged out!!");
     }
 
     render() {
@@ -118,7 +119,7 @@ class Header extends Component {
                 <Navbar dark expand="sm" className="fixed-top">
                     <div className="container">
                         <NavbarToggler onClick={this.toggleNav} />
-                        <NavbarBrand className="mr-4"><Link to="/home" className="text-white-50 text-decoration-none">Blog Space</Link></NavbarBrand>
+                        <NavbarBrand href="/home" className="mr-4">Blog Space</NavbarBrand>
                         <Collapse isOpen={this.state.isNavOpen} navbar>
                             <Nav navbar>
                                 <NavItem>
@@ -134,7 +135,8 @@ class Header extends Component {
                             <Nav className="ml-auto" navbar>
                                 {this.props.login.isAuthenticated ? 
                                     <NavItem className="mr-2 mt-auto">
-                                        <div className="navbar-text mr-3">{this.props.login.user.replace(/^"(.+(?="$))"$/, '$1')}</div>
+                                        <div className="navbar-text mr-3">{this.props.login.user}</div>
+                                        {/* .replace(/^"(.+(?="$))"$/, '$1') */}
                                         <Button outline size="sm" color="light" onClick={this.handleLogout} >
                                             <span className="fa fa-sign-out"></span> Logout
                                         </Button>

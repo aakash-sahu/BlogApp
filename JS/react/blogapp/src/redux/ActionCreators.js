@@ -186,7 +186,7 @@ export const logoutFailed = (message) => {
 };
 
 export const logoutUser = () => (dispatch) => {
-    
+    console.log("Check cookie logout:", Cookies.get('session-id'));
     dispatch(logoutRequest);
     Cookies.remove('session-id');
     localStorage.removeItem('user');

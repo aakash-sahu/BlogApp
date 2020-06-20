@@ -45,6 +45,7 @@ app.use(session({
   secret: '12345-67890-09876-54321',
   saveUninitialized: false,
   resave: false,
+  cookie: { httpOnly:false },
   store: new FileStore()
 }));
 
