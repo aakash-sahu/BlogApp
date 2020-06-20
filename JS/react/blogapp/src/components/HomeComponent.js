@@ -24,7 +24,7 @@ function Home(props)  {
         <main className="container">
             {props.alertState.visible ? (<div className = "row">
                 <div className= "col-12"> 
-                    <Alert  color={props.alertState.category} visible={props.alertState.visible} toggle={props.dismissAlert}>
+                    <Alert  color={props.alertState.category} visible={props.alertState.visible.toString()} toggle={props.dismissAlert}>
                         {props.alertState.message }
                     </Alert >
                 </div>             

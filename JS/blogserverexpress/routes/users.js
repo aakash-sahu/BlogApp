@@ -70,11 +70,13 @@ usersRouter.post('/login', (req, res, next) => {
 });
 
 usersRouter.get('/logout', (req, res, next) => {
+  console.log(req.user);
   if (req.user) {
+
     req.session.destroy();
     res.clearCookie('session-id');
     req.logOut();
-    res.redirect('/')
+    res.end("You are successfully logged out");
   }
   else {
     var err = new Error('You are not logged in!');

@@ -124,9 +124,11 @@ export const loginUser = (loginCreds) => (dispatch) => {
     return fetch(baseUrl +'users/login', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': '*/*'
         },
-        body : JSON.stringify(loginCreds)
+        body : JSON.stringify(loginCreds),
+        credentials: 'include',
     })
     // .then(response => {
     //     if (response.ok) {
@@ -141,12 +143,15 @@ export const loginUser = (loginCreds) => (dispatch) => {
     //     //     // throw error;
     //     // }
     // }, error => { throw error})
+    // .then(response =>{console.log(response.headers.get('set-cookie'));})
     .then(response => response.json())
     .then(response => {
         if (response.success){
+            console.log("Cookie: ", document.cookie);
             localStorage.setItem('user', JSON.stringify(loginCreds.username));
             dispatch(loginSuccess(response))
             console.log("Login success with response: ", response);
+            
         }
         else {
             dispatch(loginFailed(response)); 
@@ -181,6 +186,7 @@ export const logoutFailed = (message) => {
 };
 
 export const logoutUser = () => (dispatch) => {
+    
     dispatch(logoutRequest);
     Cookies.remove('session-id');
     localStorage.removeItem('user');

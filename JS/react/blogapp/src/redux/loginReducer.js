@@ -29,24 +29,24 @@ export const Login = (state = {
             errMess: action.message,
             user: ''
             }
-            case ActionTypes.LOGOUT_REQUEST: {
-                return {...state, 
-                    isLoading: true,
-                    isAuthenticated: true}
-                }
-            case ActionTypes.LOGOUT_SUCCESS:
-                return {...state,
-                    isLoading: false,
-                    isAuthenticated: false,
-                    errMess: '',
-                    user: null
-                 }
-            case ActionTypes.LOGOUT_FAILED:
+        case ActionTypes.LOGOUT_REQUEST: {
+            return {...state, 
+                isLoading: true,
+                isAuthenticated: true}
+            }
+        case ActionTypes.LOGOUT_SUCCESS:
             return {...state,
                 isLoading: false,
                 isAuthenticated: false,
-                errMess: action.message
+                errMess: '',
+                user: null
                 }
+        case ActionTypes.LOGOUT_FAILED:
+        return {...state,
+            isLoading: false,
+            isAuthenticated: false,
+            errMess: action.message
+            }
         default:
             return state
     }

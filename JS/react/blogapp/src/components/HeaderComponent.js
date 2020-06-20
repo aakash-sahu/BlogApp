@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand, NavItem, NavLink, Nav, NavbarToggler, Collapse, Button, Modal, ModalBody, ModalHeader,
+import { Navbar, NavbarBrand, NavItem, Nav, NavbarToggler, Collapse, Button, Modal, ModalBody, ModalHeader,
         FormGroup, Label, Input, Form, Alert  } from 'reactstrap';
+import { NavLink, Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -114,18 +115,21 @@ class Header extends Component {
     render() {
         return (
             <React.Fragment>
-                <Navbar dark expand="md" className="fixed-top">
+                <Navbar dark expand="sm" className="fixed-top">
                     <div className="container">
                         <NavbarToggler onClick={this.toggleNav} />
-                        <NavbarBrand className="mr-4" href="/home">Blog Space</NavbarBrand>
+                        <NavbarBrand className="mr-4"><Link to="/home" className="text-white-50 text-decoration-none">Blog Space</Link></NavbarBrand>
                         <Collapse isOpen={this.state.isNavOpen} navbar>
                             <Nav navbar>
                                 <NavItem>
-                                    <NavLink href="/home">Home</NavLink>
+                                    <NavLink className="nav-link" to="/home">Home</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink href="/about">About</NavLink>
-                                </NavItem>                        
+                                    <NavLink className="nav-link" to="/about">About</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink className="nav-link" to="/account">Account</NavLink>
+                                </NavItem>                           
                             </Nav>
                             <Nav className="ml-auto" navbar>
                                 {this.props.login.isAuthenticated ? 

@@ -49,7 +49,7 @@ app.use(session({
 }));
 
 //allow all cors for now
-app.use(cors());
+app.use(cors({origin:true,credentials: true}));
 
 //passport
 app.use(passport.initialize());

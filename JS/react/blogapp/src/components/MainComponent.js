@@ -3,6 +3,7 @@ import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import Header from './HeaderComponent';
 import About from './AboutComponent';
 import Home from './HomeComponent';
+import Account from './AccountComponent';
 import { connect } from 'react-redux';
 import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert } from '../redux/ActionCreators';
 
@@ -42,7 +43,21 @@ class Main extends Component {
                 alertState = {this.props.alertState}
                 />
             )
-        }
+        };
+
+        const PrivateRoute =({component: Component, loggedIn, ...rest}) => {
+            console.log("private route", this.props.login.isAuthenticated);
+            return (
+            <Route {...rest} render= {(props) => (
+                
+                loggedIn
+                ? <Component {...props} />
+                : <Redirect to={{pathname: '/home', state: { from: props.location}
+                    }} />
+            )} />
+        )};
+
+
         return (
             <div>
                 <Header registerUser = {this.props.registerUser} registration = {this.props.registration}
@@ -51,6 +66,7 @@ class Main extends Component {
                 <Switch>
                     <Route path='/home' component = {HomePage}/>
                     <Route path='/about' component= {About} />
+                    <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/account' component= {() => <Account login = {this.props.login} />} /> 
                     <Redirect to="/home" />
                 </Switch>
             </div>
