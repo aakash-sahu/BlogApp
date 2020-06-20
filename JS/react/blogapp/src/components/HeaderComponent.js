@@ -68,6 +68,7 @@ class Header extends Component {
         }
         else {
             this.toggleRegisterModal();
+            this.props.showAlert("success", "You are successfully registered!! You can log in now!");
         }
         // console.log(this.props.registration.registerSuccess);
         // console.log(this.props.login.errMess);
@@ -91,6 +92,7 @@ class Header extends Component {
         }
         else {
             this.toggleLoginModal();
+            this.props.showAlert("success", "You are logged in!!");
         }
         //add togglemodal later and also look for a flash message
     };

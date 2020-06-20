@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Media, Card,CardBody, CardHeader,CardText, ListGroup, ListGroupItem } from 'reactstrap';
+import { Media, Card,CardBody, CardHeader,CardText, ListGroup, ListGroupItem, Alert, UncontrolledAlert  } from 'reactstrap';
 
 function Home(props)  {
 
@@ -22,8 +22,17 @@ function Home(props)  {
 
     return (
         <main className="container">
+            {props.alertState.visible ? (<div className = "row">
+                <div className= "col-12"> 
+                    <Alert  color={props.alertState.category} visible={props.alertState.visible} toggle={props.dismissAlert}>
+                        {props.alertState.message }
+                    </Alert >
+                </div>             
+            </div>)
+            :
+            (<div></div>)}   
             <div className = "row">
-                <div className= "col-12 col-md-8">
+                <div className= "col-12 col-md-8"> 
                     {posts}
                 </div>
                 <div className="col-12 col-md-4">

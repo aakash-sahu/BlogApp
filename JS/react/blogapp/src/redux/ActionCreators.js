@@ -186,3 +186,19 @@ export const logoutUser = () => (dispatch) => {
     localStorage.removeItem('user');
     dispatch(logoutSuccess())
 }
+
+//alert action creators
+
+export const showAlert = (alertType, alertMsg) => {
+    return {
+        type: ActionTypes.ALERT_MSG,
+        category: alertType,
+        message: alertMsg
+    }
+};
+
+export const dismissAlert = () => {
+    return {
+        type: ActionTypes.ALERT_DISMISS,
+    }
+};

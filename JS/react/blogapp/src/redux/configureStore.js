@@ -5,13 +5,15 @@ import logger from 'redux-logger';
 import { Posts}  from './post'
 import { Registration } from './registrationReducer';
 import { Login } from './loginReducer';
+import { Alert } from './alertReducer';
  
 export const ConfigureStore = () => {
     const store = createStore(
         combineReducers({
             posts: Posts,
             registration: Registration,
-            login: Login 
+            login: Login,
+            alertState: Alert 
         }),
         applyMiddleware(thunk, logger)
     );
