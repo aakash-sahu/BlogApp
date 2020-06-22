@@ -8,7 +8,7 @@
             <p class="text-secondary">{{ current_user.email }}</p>
         </div>
         </div>
-            <form method="POST" action="">
+            <form method="POST" action="" enctype="multipart/form-data"> <!-- Don't forget to add enctype tag if uploading images-->
                 <!-- form.hidden_tags adds a CSRF (cross site-request forgery token to the form) -->
                 {{ form.hidden_tag() }}
                 <fieldset class="form-group">
@@ -40,14 +40,18 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
+                        {{ form.picture.label() }}
+                        {{ form.picture(class="form-control-file") }}
+                        {% if form.picture.errors %}
+                            {% for error in form.picture.errors %}
+                                <span class="text-danger">{{ error }}</span><br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
                         {{ form.submit(class="btn btn-outline-info") }}
                     </div>
                 </fieldset>
             </form>
-        <div class="border-top pt-3 mb-5">
-            <small class="text-muted">
-                Already Have an Account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
-            </small>
-        </div>
     </div>
 {% endblock content %}

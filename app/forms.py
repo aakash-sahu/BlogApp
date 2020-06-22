@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 # Form elements come from wtform
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
@@ -46,6 +47,8 @@ class UpdateAccountForm(FlaskForm):
     
     email = StringField('Email', 
                             validators=[DataRequired(),Email()])
+
+    picture= FileField('Update profile picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
 
     ## removed password and confirm password as will add another feature to reset pwd
