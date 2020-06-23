@@ -14,6 +14,7 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const profilePicsRouter = require('./routes/profilePicsRouter');
 
 //import routes here
 var postRouter = require('./routes/postRouter');
@@ -61,6 +62,9 @@ app.use('/users', usersRouter);
 
 //add routers here
 app.use('/posts', postRouter);
+
+//image router --integrate with account update router as middleware later
+app.use('/profilePicsRouter', profilePicsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

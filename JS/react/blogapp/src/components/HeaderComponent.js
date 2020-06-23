@@ -128,30 +128,38 @@ class Header extends Component {
                                 <NavItem>
                                     <NavLink className="nav-link" to="/about">About</NavLink>
                                 </NavItem>
-                                <NavItem>
+                                {/* <NavItem>
                                     <NavLink className="nav-link" to="/account">Account</NavLink>
-                                </NavItem>                           
+                                </NavItem>                            */}
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                {this.props.login.isAuthenticated ? 
+                                {this.props.login.isAuthenticated ?
+                                <React.Fragment> 
                                     <NavItem className="mr-2 mt-auto">
-                                        <div className="navbar-text mr-3">{this.props.login.user}</div>
-                                        {/* .replace(/^"(.+(?="$))"$/, '$1') */}
-                                        <Button outline size="sm" color="light" onClick={this.handleLogout} >
+                                    <NavLink className="nav-link" to="/account">{this.props.login.user}</NavLink>
+                                    </NavItem>
+                                    <NavItem className="mr-2 mt-auto">
+                                        <NavLink className="nav-link" to="/account">Account</NavLink>
+                                    </NavItem>
+                                    <NavItem className="mr-auto mt-auto">
+                                        <Button outline size="sm" color="light" onClick={this.handleLogout}  >
                                             <span className="fa fa-sign-out"></span> Logout
                                         </Button>
                                     </NavItem>
+                                </React.Fragment>
                                     :
-                                    <span>
-                                        <NavItem className="mr-2 mt-auto">
-                                            <Button outline size="sm" color="light" onClick={this.toggleLoginModal} className="mt-auto mr-2" >
+                                    <React.Fragment> 
+                                        <NavItem className="mr-2 mt-1">
+                                            <Button outline size="sm" color="light" onClick={this.toggleLoginModal} className="" >
                                                 <span className="fa fa-sign-in"></span> Login
                                             </Button>
-                                            <Button outline size="sm" color="light" onClick={this.toggleRegisterModal} className="mt-auto m-auto">
+                                        </NavItem>
+                                        <NavItem className="mr-2 mt-1">
+                                            <Button outline size="sm" color="light" onClick={this.toggleRegisterModal} className="">
                                                 <span className="fa fa-circle"></span> Register
                                             </Button>
                                         </NavItem> 
-                                    </span>
+                                    </React.Fragment>
                                 }                       
                             </Nav>                    
                         </Collapse>
