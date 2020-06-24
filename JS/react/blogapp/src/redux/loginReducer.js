@@ -8,18 +8,18 @@ export const Login = (state = {
     errMess: null
 }, action) => {
     switch(action.type){
-        case ActionTypes.LOGIN_REQUEST: {
+        case ActionTypes.LOGIN_REQUEST: 
             return {...state, 
                 isLoading: true,
                 isAuthenticated: false,
-                user: action.loginCreds.username}
-        }
+                // user: action.loginCreds.username
+            }
 
         case ActionTypes.LOGIN_SUCCESS:
             return {...state,
                 isLoading: false,
                 isAuthenticated: true,
-                // user: localStorage.getItem('user'),
+                user: action.payload,
                 errMess: ''
              }
         case ActionTypes.LOGIN_FAILED:

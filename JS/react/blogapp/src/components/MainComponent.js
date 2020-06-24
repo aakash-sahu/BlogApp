@@ -45,6 +45,13 @@ class Main extends Component {
             )
         };
 
+        const AccountPage = () => {
+            return (
+               <Account login={this.props.login}
+               />
+            )
+        };
+
         const PrivateRoute =({component: Component, loggedIn, ...rest}) => {
             console.log("private route", this.props.login.isAuthenticated);
             return (
@@ -66,7 +73,7 @@ class Main extends Component {
                 <Switch>
                     <Route path='/home' component = {HomePage}/>
                     <Route path='/about' component= {About} />
-                    <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/account' component= {() => <Account login = {this.props.login} />} /> 
+                    <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/account' component= {AccountPage} /> 
                     <Redirect to="/home" />
                 </Switch>
             </div>

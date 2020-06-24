@@ -16,7 +16,7 @@ var User = new Schema({
     },
     image:{
         type:String,
-        default: 'default.jpg'
+        default: 'images/profilePics/default.jpeg' //served at http://localhost:3000/images/profilePics/default.jpeg
     }
     // posts = [{
     //     type: mongoose.Schema.Types.ObjectId,

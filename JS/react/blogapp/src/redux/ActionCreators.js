@@ -103,9 +103,10 @@ export const loginRequest = (loginCreds) => {
     }
 };
 
-export const loginSuccess = () => {
+export const loginSuccess = (response) => {
     return {
-        type: ActionTypes.LOGIN_SUCCESS
+        type: ActionTypes.LOGIN_SUCCESS,
+        payload: response
     }
 };
 
@@ -148,8 +149,10 @@ export const loginUser = (loginCreds) => (dispatch) => {
     .then(response => {
         if (response.success){
             console.log("Cookie: ", document.cookie);
-            localStorage.setItem('user', JSON.stringify(loginCreds.username));
-            dispatch(loginSuccess(response))
+            // localStorage.setItem('user', JSON.stringify(loginCreds.username));
+            response.user.image = baseUrl + response.user.image;
+            localStorage.setItem('user', JSON.stringify(response.user));
+            dispatch(loginSuccess(response.user))
             console.log("Login success with response: ", response);
             
         }
@@ -208,3 +211,28 @@ export const dismissAlert = () => {
         type: ActionTypes.ALERT_DISMISS,
     }
 };
+
+//update account info
+// export const updateUserAccount = (updateInfo) => (dispatch) => {
+//     if 
+
+//     return fetch(baseUrl +'users/update', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body : JSON.stringify(updateInfo)
+//     })
+//     .then(response => response.json())
+//     .then(response => {
+//         if (response.success){
+//             dispatch(registerSuccess(response))
+//             console.log("Update success with response: ", response);
+//         }
+//         else {
+//             dispatch(registerFailed(response.err)); 
+//             console.log("Update failed with response: ", response);
+//         }
+//     })
+//     .catch(error => {console.log(error); dispatch(registerFailed(error))})
+// };

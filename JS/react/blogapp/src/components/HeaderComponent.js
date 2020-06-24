@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Navbar, NavbarBrand, NavItem, Nav, NavbarToggler, Collapse, Button, Modal, ModalBody, ModalHeader,
         FormGroup, Label, Input, Form, Alert  } from 'reactstrap';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -136,7 +136,7 @@ class Header extends Component {
                                 {this.props.login.isAuthenticated ?
                                 <React.Fragment> 
                                     <NavItem className="mr-2 mt-auto">
-                                    <NavLink className="nav-link" to="/account">{this.props.login.user}</NavLink>
+                                    {/* <NavLink className="nav-link" to="/account">{this.props.login.username}</NavLink> */}
                                     </NavItem>
                                     <NavItem className="mr-2 mt-auto">
                                         <NavLink className="nav-link" to="/account">Account</NavLink>

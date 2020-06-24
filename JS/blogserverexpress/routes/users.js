@@ -61,7 +61,8 @@ usersRouter.post('/login', (req, res, next) => {
       console.log('This else part should not print when wrong password');
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
-      res.json({success:true, status: 'Login Successfull', username: req.user.username});
+      res.json({success:true, status: 'Login Successfull', 
+              user: {username: req.user.username,email:req.user.email, image:req.user.image,_id: req.user._id }});
       });
  
 
