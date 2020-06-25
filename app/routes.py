@@ -109,3 +109,9 @@ def new_post():
         flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
+
+# route with variables inside them. variables can be given type like string, int etc.
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id) #get or give 404 status
+    return render_template('post.html', title=post.title, post=post)
