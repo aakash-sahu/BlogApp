@@ -212,27 +212,43 @@ export const dismissAlert = () => {
     }
 };
 
-//update account info
-// export const updateUserAccount = (updateInfo) => (dispatch) => {
-//     if 
+// update account info
+export const updateUserAccount = (updateInfo) => (dispatch) => {
 
-//     return fetch(baseUrl +'users/update', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body : JSON.stringify(updateInfo)
-//     })
-//     .then(response => response.json())
-//     .then(response => {
-//         if (response.success){
-//             dispatch(registerSuccess(response))
-//             console.log("Update success with response: ", response);
-//         }
-//         else {
-//             dispatch(registerFailed(response.err)); 
-//             console.log("Update failed with response: ", response);
-//         }
-//     })
-//     .catch(error => {console.log(error); dispatch(registerFailed(error))})
-// };
+    return fetch(baseUrl +'users/update', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body : JSON.stringify(updateInfo),
+        credentials: 'include'
+
+    })
+    .then(response => response.json())
+    .then(response => { console.log(response);
+        if (response.success){
+            response.user.image = baseUrl + response.user.image;
+            dispatch(accountUpdateSuccess(response.user))
+            console.log("Update success with response: ", response);
+        }
+        else {
+            dispatch(accountUpdateFailed(response)); 
+            console.log("Update failed with response: ", response);
+        }
+    })
+    .catch(error => {console.log(error); dispatch(accountUpdateFailed(error))})
+};
+
+export const accountUpdateSuccess = (response) => {
+    return {
+        type: ActionTypes.ACCOUNT_UPDATE_SUCCESS,
+        payload: response
+    }
+};
+
+export const accountUpdateFailed = (message) => {
+    return {
+        type: ActionTypes.ACCOUNT_UPDATE_FAILED,
+        message
+    }
+};

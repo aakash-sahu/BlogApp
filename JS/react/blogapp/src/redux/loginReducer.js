@@ -47,6 +47,16 @@ export const Login = (state = {
             isAuthenticated: false,
             errMess: action.message
             }
+        case ActionTypes.ACCOUNT_UPDATE_SUCCESS:
+            return {
+                ...state,
+                user: action.payload,
+            }
+        case ActionTypes.ACCOUNT_UPDATE_FAILED:
+            return {
+                ...state,
+                errMess: action.message
+            }
         default:
             return state
     }

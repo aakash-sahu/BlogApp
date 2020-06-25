@@ -5,7 +5,7 @@ import About from './AboutComponent';
 import Home from './HomeComponent';
 import Account from './AccountComponent';
 import { connect } from 'react-redux';
-import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert } from '../redux/ActionCreators';
+import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -22,7 +22,8 @@ const mapDispatchToProps = (dispatch) => ({
     loginUser: (loginCreds) => dispatch(loginUser(loginCreds)),
     logoutUser: () => dispatch(logoutUser()),
     showAlert: (alertType, alertMsg) => dispatch(showAlert(alertType, alertMsg)),
-    dismissAlert: () => dispatch(dismissAlert())
+    dismissAlert: () => dispatch(dismissAlert()),
+    updateUserAccount: (updateInfo) => dispatch(updateUserAccount(updateInfo))
 });
 
 class Main extends Component {
@@ -47,7 +48,7 @@ class Main extends Component {
 
         const AccountPage = () => {
             return (
-               <Account login={this.props.login}
+               <Account login={this.props.login} updateUserAccount={this.props.updateUserAccount}
                />
             )
         };

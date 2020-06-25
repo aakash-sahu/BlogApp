@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 var passport = require('passport');
+const connectEnsureLogin = require("connect-ensure-login");
 var authenticate = require('../authenticate');
 var User = require('../models/users');
 // const { router } = require('../app');
@@ -70,6 +71,7 @@ usersRouter.post('/login', (req, res, next) => {
   })(req, res,next)
 });
 
+//logout router
 usersRouter.get('/logout', (req, res, next) => {
   console.log(req.user);
   if (req.user) {
@@ -86,5 +88,31 @@ usersRouter.get('/logout', (req, res, next) => {
   }
 });
 
+
+//account update router
+//it's working wihtout authentication--need to figure out how to get it working with authentication
+usersRouter.put('/update',  (req, res, next) => {
+  console.log(req.cookies);
+  console.log("Update user account ",req.isAuthenticated()); //, req.user
+  if (req.isAuthenticated()) {
+    User.findByIdAndUpdate(req.body._id, {$set:req.body}, {new:true})
+    .then((user) => {
+      //relogin user afer account update
+      req.login(user, (err) => {
+        if (err)
+          return next(err);
+          res.statusCode=200;
+          res.setHeader("Content-Type", "application/json");
+          res.json({success:true, status: 'Update successful!', user: user});
+          }, (err) => next(err))
+      })
+      .catch((err) => next(err))
+  }
+  else {
+    res.statusCode = 401;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success:false, status: 'Update not successful!', err:'You are not authenticated!' });
+  }
+});
 
 module.exports = usersRouter;

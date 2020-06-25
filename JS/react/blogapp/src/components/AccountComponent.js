@@ -40,7 +40,7 @@ class Account extends Component  {
             this.showAccountUpdateModal("No changes in the account information!!")
         }
         else {
-            await this.props.updateUserAccount({username: values.username, email: values.email});
+            await this.props.updateUserAccount({username: values.username, email: values.email, _id: this.props.login.user._id});
             console.log("update account success", this.props.registration.registerSuccess);
             if (!this.props.registration.registerSuccess){
                 actions.setStatus(undefined);
