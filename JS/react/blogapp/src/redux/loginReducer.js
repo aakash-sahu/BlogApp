@@ -5,7 +5,8 @@ export const Login = (state = {
     isLoading: false,
     isAuthenticated: Cookies.get('session-id') ? true : false,
     user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
-    errMess: null
+    errMess: null,
+    accountUpdate: false
 }, action) => {
     switch(action.type){
         case ActionTypes.LOGIN_REQUEST: 
@@ -51,6 +52,7 @@ export const Login = (state = {
             return {
                 ...state,
                 user: action.payload,
+                accountUpdate: true
             }
         case ActionTypes.ACCOUNT_UPDATE_FAILED:
             return {

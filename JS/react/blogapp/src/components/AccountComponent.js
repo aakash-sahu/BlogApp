@@ -41,17 +41,14 @@ class Account extends Component  {
         }
         else {
             await this.props.updateUserAccount({username: values.username, email: values.email, _id: this.props.login.user._id});
-            console.log("update account success", this.props.registration.registerSuccess);
-            if (!this.props.registration.registerSuccess){
-                actions.setStatus(undefined);
-                actions.setStatus({
-                    'username': this.props.registration.errMess
-                });
-            }
-            else {
-                this.toggleRegisterModal();
-                this.props.showAlert("success", "You are successfully registered!! You can log in now!");
-            }
+            // console.log("update account success for: ", this.props.login.user);
+            // if (!this.props.login.accountUpdate){
+            //     actions.setStatus(undefined);
+            //     actions.setStatus({
+            //         'username': this.props.login.errMess
+            //     });
+            //     // this.showAccountUpdateModal("Errors!!");
+            // }
         }
     };
     
@@ -65,7 +62,7 @@ class Account extends Component  {
                         <div className="content-section">
                             <Media>
                                 <Media left>
-                                    <img className="rounded-circle account-img" src={this.props.login.user.image} alt="Account picture" />
+                                    <img className="rounded-circle account-img" src={this.props.login.user.image} alt="Account" />
                                     {/* <Media object data-src={this.props.login.user.image} alt="Account picture" /> */}
                                 </Media>
                                 <Media body>
@@ -82,7 +79,8 @@ class Account extends Component  {
                                 initialValues={{ username: this.props.login.user.username, email:this.props.login.user.email}}
                                 onSubmit={this.handleUpdateAccountSubmit} 
                                 validationSchema={updateAccountSchema}
-                                enableReinitialize={true} >
+                                enableReinitialize={true} 
+                                >
                                 {(props) => {
                                     const {
                                         values,
@@ -97,7 +95,7 @@ class Account extends Component  {
                                         status
                                     } = props;
                                     return (
-                                        <Form className="m-4" onSubmit={handleSubmit} enableReinitialize={true}>
+                                        <Form className="m-4" onSubmit={handleSubmit}>
                                             <legend>Update Account</legend><hr/>
                                             <FormGroup>
                                                 <Label htmlFor="username">Username</Label>
@@ -120,8 +118,7 @@ class Account extends Component  {
                                             {status && status.username ? (<div><Alert color="danger">{status.username}</Alert></div>) : <div></div>}
                                                 <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Update</Button>
                                         </Form>
-                                    )
-                                    } 
+                                    )} 
                                 }
                             </Formik>
                             </div>

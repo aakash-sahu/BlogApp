@@ -29,9 +29,13 @@ const mapDispatchToProps = (dispatch) => ({
 class Main extends Component {
 
     componentDidMount() {
+        this._isMounted = true;
         this.props.fetchPosts();
         // this.props.showAlert("success", "page loaded");
     }
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
     render () {
 
