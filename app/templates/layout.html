@@ -31,6 +31,7 @@
                     </ul>
                     <ul class="navbar-nav">
                         {% if current_user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('new_post') }}"><span class="fa fa-file-text-o"></span>New Post</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('account') }}"><span class="fa fa-user-circle-o"></span>Account</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><span class="fa fa-sign-out"></span>Logout</a></li>                    
                         {% else %}
