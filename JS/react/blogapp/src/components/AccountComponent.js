@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormGroup, Label, Input, Form, Alert, Media,Modal, ModalBody, ModalHeader   } from 'reactstrap';
+import { Button, FormGroup, Label, Input, Form, Alert, Media,Modal, ModalBody, ModalHeader, FormText   } from 'reactstrap';
 // import { NavLink, Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -34,22 +34,31 @@ class Account extends Component  {
     };
 
 
-   async handleUpdateAccountSubmit(values, actions) {
-        console.log("Update user account: "+JSON.stringify(values));
-        if (values.username === this.props.login.user.username && values.email === this.props.login.user.email) {
-            this.showAccountUpdateModal("No changes in the account information!!")
-        }
-        else {
-            await this.props.updateUserAccount({username: values.username, email: values.email, _id: this.props.login.user._id});
+   handleUpdateAccountSubmit(values, actions) {
+        console.log("Update user account: "+JSON.stringify({name: values.username, email: values.email, imageFile: values.file}));
+        // following  modal got rendered useless as forgot about image upload
+        // if (values.username === this.props.login.user.username && values.email === this.props.login.user.email) {
+        //     this.showAccountUpdateModal("No changes in the account information!!")
+        // }
+        // else {
+            //only working with FormData attribute
+            var data = new FormData()
+            data.append('imageFile', values.file);
+            data.append('username',values.username);
+            data.append('email',values.email);
+            data.append('_id',this.props.login.user._id);
+            this.props.updateUserAccount(data);
+            // await this.props.updateUserAccount({username: values.username, email: values.email, _id: this.props.login.user._id, imageFile: values.file});
             // console.log("update account success for: ", this.props.login.user);
+            // getting warning so removing this stuff -- cant-perform-a-react-state-update-on-an-unmounted-component
             // if (!this.props.login.accountUpdate){
             //     actions.setStatus(undefined);
             //     actions.setStatus({
             //         'username': this.props.login.errMess
             //     });
-            //     // this.showAccountUpdateModal("Errors!!");
+            //     this.showAccountUpdateModal("Errors!!");
             // }
-        }
+        // }
     };
     
     render() {
@@ -92,7 +101,7 @@ class Account extends Component  {
                                         handleSubmit,
                                         handleReset,
                                         isSubmitting,
-                                        status
+                                        setFieldValue
                                     } = props;
                                     return (
                                         <Form className="m-4" onSubmit={handleSubmit}>
@@ -115,7 +124,15 @@ class Account extends Component  {
                                                     }/>
                                                 {errors.email && touched.email && (<div className="invalid-feedback">{errors.email}</div>)}
                                             </FormGroup>
-                                            {status && status.username ? (<div><Alert color="danger">{status.username}</Alert></div>) : <div></div>}
+                                            <FormGroup className="ml-2">
+                                                <Label for="file">Update profile photo</Label>
+                                                <Input type="file" name="file" id="file" 
+                                                    onChange = {(event) => {setFieldValue("file", event.currentTarget.files[0])} }/>
+                                                <FormText color="muted">
+                                                    Upload an image for your profile
+                                                </FormText>
+                                            </FormGroup>
+                                            {/*revisit later - {status && status.username ? (<div><Alert color="danger">{status.username}</Alert></div>) : <div></div>} */}
                                                 <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Update</Button>
                                         </Form>
                                     )} 

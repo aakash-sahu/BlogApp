@@ -52,7 +52,8 @@ export const Login = (state = {
             return {
                 ...state,
                 user: action.payload,
-                accountUpdate: true
+                accountUpdate: true,
+                errMess: ''
             }
         case ActionTypes.ACCOUNT_UPDATE_FAILED:
             return {

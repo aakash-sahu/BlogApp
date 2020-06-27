@@ -1,11 +1,37 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-
+const multer = require('multer');
+const path = require('path'); //to extract file extension as path.extname('abc.jpeg') => '.jpeg'
+const crypto = require('crypto'); //to create random file name -- let id = crypto.randomBytes(8).toString('hex')
+//TODO - resize images
 var passport = require('passport');
 const connectEnsureLogin = require("connect-ensure-login");
 var authenticate = require('../authenticate');
 var User = require('../models/users');
 // const { router } = require('../app');
+
+//file upload using multer for account update page
+//storage options
+const storage = multer.diskStorage({
+  destination: (req, file,cb ) => {
+      cb(null, 'public/images/profilePics');
+  },
+  filename: (req, file, cb) => {
+      const filename = crypto.randomBytes(8).toString('hex');
+      const fExtension = path.extname(file.originalname);
+      cb(null, filename+fExtension)
+  }
+});
+
+// allowing only certain file types
+const imageFilter = (req, file, cb) => {
+  if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(new Error('You can upload only image files'), false)
+  }
+  cb(null,true);
+};
+
+const upload = multer({storage: storage, fileFilter: imageFilter});
 
 var usersRouter = express.Router();
 usersRouter.use(bodyParser.json());
@@ -45,8 +71,8 @@ usersRouter.post('/login', (req, res, next) => {
       res.statusCode = 401;
       res.setHeader("Content-Type", "application/json");
       res.json({success:false, status: 'Login Not Successfull', err:info.message});
-      //can't figure out the error in next step so hacky solution. change to jwt later.
-      next(res);
+      //can't figure out the error in next step so hacky solution. change to jwt later. fixed using return statement to end execution
+      return;
     }
  
     req.login(user, (err) => {
@@ -91,22 +117,58 @@ usersRouter.get('/logout', (req, res, next) => {
 
 //account update router
 //it's working wihtout authentication--need to figure out how to get it working with authentication
-usersRouter.put('/update',  (req, res, next) => {
-  console.log(req.cookies);
+usersRouter.put('/update', upload.single('imageFile'),  (req, res, next) => {
+  console.log("Current user:", req.user.username, req.user.email);
+  console.log("Req body:",req.body.username, req.body.email);
   console.log("Update user account ",req.isAuthenticated()); //, req.user
+  // console.log(req.file);
+  // add file path to the user account
+  if (req.file) {
+    req.body.image = req.file.path.slice(7);
+  } //remove the public part from the path. slice first 7 chars
   if (req.isAuthenticated()) {
-    User.findByIdAndUpdate(req.body._id, {$set:req.body}, {new:true})
-    .then((user) => {
-      //relogin user afer account update
-      req.login(user, (err) => {
-        if (err)
-          return next(err);
+    // User.findByIdAndUpdate(req.body._id, {$set:req.body}, {new:true, runValidators:true, useFindAndModify:false})
+    if (req.user.username != req.body.username){
+      User.findOne({username: req.body.username}, (err, user) => {
+        if (err) {return next(err)}
+        console.log("usr in first block: :", user);
+        if (user) {
+          res.statusCode = 403;
+          res.setHeader("Content-Type", "application/json");
+          res.json({success:false, status: 'Update Not Successfull', err:"Username already exists. Choose another one!"});
+          return;
+        }
+      })
+    }
+   if (req.user.email != req.body.email) {
+     User.findOne({email: req.body.email}, (err, user) => {
+        if (err) {return next(err)}
+        // console.log("User in 2nd block: ", user)
+        if (user) {
+          res.statusCode = 403;
+          res.setHeader("Content-Type", "application/json");
+          res.json({success:false, status: 'Update Not Successfull', err:"Email already exists. Choose another one"});
+          return;
+        }
+      })
+    }
+      console.log("why is code below this being executed when error??")
+      User.findByIdAndUpdate(req.body._id, {$set:req.body}, {new:true, useFindAndModify:false})
+      .then((user) => {
+        //relogin user afer account update
+        req.login(user, (err) => {
+          if (err) {
+            console.log(err);
+            return next(err);
+          }
           res.statusCode=200;
           res.setHeader("Content-Type", "application/json");
           res.json({success:true, status: 'Update successful!', user: user});
-          }, (err) => next(err))
-      })
-      .catch((err) => next(err))
+          return;
+          })
+        }, (err) => next(err))
+        .catch((err) => next(err))
+
   }
   else {
     res.statusCode = 401;

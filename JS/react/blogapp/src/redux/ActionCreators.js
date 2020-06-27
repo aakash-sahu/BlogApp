@@ -2,6 +2,7 @@ import * as ActionTypes from './ActionTypes';
 import Cookies from 'js-cookie';
 
 import { baseUrl } from '../shared/baseUrl';
+import { Col } from 'reactstrap';
 
 export const fetchPosts = () => (dispatch) => {
 
@@ -214,29 +215,29 @@ export const dismissAlert = () => {
 
 // update account info
 export const updateUserAccount = (updateInfo) => (dispatch) => {
+    console.log("Fetch with user data: ", updateInfo);
 
     return fetch(baseUrl +'users/update', {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body : JSON.stringify(updateInfo),
+        // dont use multipart/form-data with fetch
+        body : updateInfo,
         credentials: 'include'
-
     })
     .then(response => response.json())
-    .then(response => { console.log(response);
+    .then(response => { 
+        console.log(response.body);
         if (response.success){
             response.user.image = baseUrl + response.user.image;
+            localStorage.setItem('user', JSON.stringify(response.user));
             dispatch(accountUpdateSuccess(response.user))
             console.log("Update success with response: ", response);
         }
         else {
-            dispatch(accountUpdateFailed(response)); 
             console.log("Update failed with response: ", response);
+            dispatch(accountUpdateFailed(response)); 
         }
     })
-    .catch(error => {console.log(error); dispatch(accountUpdateFailed(error))})
+    .catch(error => {console.log(error)})  //; dispatch(accountUpdateFailed(error))
 };
 
 export const accountUpdateSuccess = (response) => {
