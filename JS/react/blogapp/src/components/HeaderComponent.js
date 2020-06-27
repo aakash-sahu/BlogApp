@@ -136,12 +136,15 @@ class Header extends Component {
                                 {this.props.login.isAuthenticated ?
                                 <React.Fragment> 
                                     <NavItem className="mr-2 mt-auto">
-                                    {/* <NavLink className="nav-link" to="/account">{this.props.login.username}</NavLink> */}
+                                    <NavLink className="nav-link" to="/account">{this.props.login.user.username}</NavLink>
                                     </NavItem>
                                     <NavItem className="mr-2 mt-auto">
-                                        <NavLink className="nav-link" to="/account">Account</NavLink>
+                                    <NavLink className="nav-link" to="/post"><span class="fa fa-file-text-o"></span>New Post</NavLink>
                                     </NavItem>
-                                    <NavItem className="mr-auto mt-auto">
+                                    <NavItem className="mr-2 mt-auto">
+                                        <NavLink className="nav-link" to="/account"><span class="fa fa-user-circle-o"></span>Account</NavLink>
+                                    </NavItem>
+                                    <NavItem className="ml-5 mt-1">
                                         <Button outline size="sm" color="light" onClick={this.handleLogout}  >
                                             <span className="fa fa-sign-out"></span> Logout
                                         </Button>

@@ -2,7 +2,6 @@ import * as ActionTypes from './ActionTypes';
 import Cookies from 'js-cookie';
 
 import { baseUrl } from '../shared/baseUrl';
-import { Col } from 'reactstrap';
 
 export const fetchPosts = () => (dispatch) => {
 
@@ -36,6 +35,47 @@ export const postsFailed = (errmess) => ({
     type: ActionTypes.POSTS_FAILED,
     payload: errmess
 });
+
+//add new post
+export const submitPost = (post) => (dispatch) => {
+
+    return fetch(baseUrl+ 'posts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(post),
+        credentials: 'include',
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(response);
+                return response
+            } else {
+                var error = new Error('The error status is ' + response.status, ':' + response.statusText);
+                error.response = response;
+                throw error;
+                }
+            },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+            .then(response => response.json())
+            .then(post => dispatch(addPost(post)))
+            .catch(error => dispatch(addPostFailed(error.message)));
+};
+
+export const addPost = (post) => ({
+    type: ActionTypes.ADD_POST,
+    payload: post
+});
+
+export const addPostFailed = (errmess) => ({
+    type: ActionTypes.ADD_POST_FAILED,
+    payload: errmess
+});
+
 
 //user registration
 export const registerSuccess = (response) => {

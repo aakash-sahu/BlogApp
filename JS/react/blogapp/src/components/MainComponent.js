@@ -4,8 +4,9 @@ import Header from './HeaderComponent';
 import About from './AboutComponent';
 import Home from './HomeComponent';
 import Account from './AccountComponent';
+import Post from './PostComponent';
 import { connect } from 'react-redux';
-import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount } from '../redux/ActionCreators';
+import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -23,7 +24,8 @@ const mapDispatchToProps = (dispatch) => ({
     logoutUser: () => dispatch(logoutUser()),
     showAlert: (alertType, alertMsg) => dispatch(showAlert(alertType, alertMsg)),
     dismissAlert: () => dispatch(dismissAlert()),
-    updateUserAccount: (updateInfo) => dispatch(updateUserAccount(updateInfo))
+    updateUserAccount: (updateInfo) => dispatch(updateUserAccount(updateInfo)),
+    submitPost: (postContent) => dispatch(submitPost(postContent))
 });
 
 class Main extends Component {
@@ -57,8 +59,15 @@ class Main extends Component {
             )
         };
 
+        const PostPage = () => {
+            return (
+               <Post submitPost ={this.props.submitPost}
+               />
+            )
+        };
+
         const PrivateRoute =({component: Component, loggedIn, ...rest}) => {
-            console.log("private route", this.props.login.isAuthenticated);
+            // console.log("private route", this.props.login.isAuthenticated);
             return (
             <Route {...rest} render= {(props) => (
                 
@@ -79,6 +88,7 @@ class Main extends Component {
                     <Route path='/home' component = {HomePage}/>
                     <Route path='/about' component= {About} />
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/account' component= {AccountPage} /> 
+                    <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/post' component={PostPage} />
                     <Redirect to="/home" />
                 </Switch>
             </div>
