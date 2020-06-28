@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, FormGroup, Label, Input, Form, Modal, ModalBody, ModalHeader } from 'reactstrap';
-// import { NavLink, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -13,10 +13,18 @@ class Post extends Component  {
     constructor(props) {
         super(props);
         this.state = {
+            redirectHome: false
         };
         
     this.handlePostSubmit = this.handlePostSubmit.bind(this);
+    this.setRedirectHome = this.setRedirectHome.bind(this);
     // this.toggleAccountUpdateModal = this.toggleAccountUpdateModal.bind(this);
+
+    };
+    setRedirectHome = () => {
+        this.setState({
+            redirectHome: true
+        })
     };
 
     // toggleAccountUpdateModal = () => {
@@ -27,10 +35,19 @@ class Post extends Component  {
 
     handlePostSubmit(values, actions) {
         console.log("Create Post: "+JSON.stringify(values));
-            this.props.submitPost(values);
+        this.props.submitPost(values);
+        // this.props.history.push('/home/');
+        this.setRedirectHome();
+        // console.log('redirect to home now');
+        // return <Redirect to='/home' />;
     };
     
     render() {
+        // to redirect the process is doing it through state change
+        if (this.state.redirectHome) {
+            this.props.showAlert("success", "Post added!!");
+            return <Redirect to='/home' />;
+        };
         return (
             <React.Fragment>
             <div className="container">

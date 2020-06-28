@@ -11,6 +11,7 @@ postRouter.use(bodyParser.json());
 postRouter.route('/')
 .get((req,res,next) => {
     Posts.find({})
+    .populate('author')
     .then((posts) => {
         res.statusCode=200;
         res.setHeader("Content-Type", "application/json");

@@ -139,10 +139,10 @@ class Header extends Component {
                                     <NavLink className="nav-link" to="/account">{this.props.login.user.username}</NavLink>
                                     </NavItem>
                                     <NavItem className="mr-2 mt-auto">
-                                    <NavLink className="nav-link" to="/post"><span class="fa fa-file-text-o"></span>New Post</NavLink>
+                                    <NavLink className="nav-link" to="/post"><span className="fa fa-file-text-o"></span>New Post</NavLink>
                                     </NavItem>
                                     <NavItem className="mr-2 mt-auto">
-                                        <NavLink className="nav-link" to="/account"><span class="fa fa-user-circle-o"></span>Account</NavLink>
+                                        <NavLink className="nav-link" to="/account"><span className="fa fa-user-circle-o"></span>Account</NavLink>
                                     </NavItem>
                                     <NavItem className="ml-5 mt-1">
                                         <Button outline size="sm" color="light" onClick={this.handleLogout}  >

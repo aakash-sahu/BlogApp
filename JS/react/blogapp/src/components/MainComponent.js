@@ -31,13 +31,13 @@ const mapDispatchToProps = (dispatch) => ({
 class Main extends Component {
 
     componentDidMount() {
-        this._isMounted = true;
+        // this._isMounted = true;
         this.props.fetchPosts();
         // this.props.showAlert("success", "page loaded");
     }
-    componentWillUnmount() {
-        this._isMounted = false;
-      }
+    // componentWillUnmount() {
+    //     this._isMounted = false;
+    //   }
 
     render () {
 
@@ -62,6 +62,7 @@ class Main extends Component {
         const PostPage = () => {
             return (
                <Post submitPost ={this.props.submitPost}
+               showAlert ={this.props.showAlert}
                />
             )
         };
