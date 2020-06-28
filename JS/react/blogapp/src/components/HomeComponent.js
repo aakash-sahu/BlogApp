@@ -36,8 +36,9 @@ class Home extends Component  {
 
     return (
         <main className="container">
-            {this.props.alertState.visible ? (<div className = "row">
-                <div className= "col-12"> 
+            {this.props.alertState.visible ? 
+            (<div className = "row">
+                <div className= "col-12 col-md-6 position-absolute alert-bar"> 
                     <Alert  color={this.props.alertState.category} visible={this.props.alertState.visible.toString()} toggle={this.props.dismissAlert}>
                         {this.props.alertState.message }
                     </Alert >

@@ -70,7 +70,8 @@ class Main extends Component {
 
         const PostDetailsPage = ({match}) => {
             return (
-                <PostDetails  posts = {this.props.posts.posts.filter((post) => post._id === match.params.postId)} />
+                <PostDetails  post = {this.props.posts.posts.filter((post) => post._id === match.params.postId)[0]}
+                        user = {this.props.login.user}        />
             )
         }
 
@@ -97,7 +98,7 @@ class Main extends Component {
                     <Route path='/about' component= {About} />
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/account' component= {AccountPage} /> 
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/post' component={PostPage} />
-                    <Route path='/post/:Id' component= {PostDetailsPage} />
+                    <Route exct path='/post/:postId' component= {PostDetailsPage} />
                     <Redirect to="/home" />
                 </Switch>
             </div>

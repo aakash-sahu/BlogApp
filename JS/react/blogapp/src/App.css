@@ -65,3 +65,8 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+.alert-bar {
+  z-index: 10;
+  opacity: 0.8;
+}
