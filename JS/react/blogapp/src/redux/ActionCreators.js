@@ -22,7 +22,9 @@ export const fetchPosts = () => (dispatch) => {
             })
             .then(response => response.json())
             // .then(posts => console.log(posts))
-            .then(posts => dispatch(addPosts(posts)))
+            .then(posts => {
+                // response.user.image = baseUrl + response.user.image;
+                dispatch(addPosts(posts))})
             .catch(error => dispatch(postsFailed(error.message)));
 };
 
@@ -191,7 +193,7 @@ export const loginUser = (loginCreds) => (dispatch) => {
         if (response.success){
             console.log("Cookie: ", document.cookie);
             // localStorage.setItem('user', JSON.stringify(loginCreds.username));
-            response.user.image = baseUrl + response.user.image;
+            // response.user.image = baseUrl + response.user.image;
             localStorage.setItem('user', JSON.stringify(response.user));
             dispatch(loginSuccess(response.user))
             console.log("Login success with response: ", response);
@@ -230,11 +232,19 @@ export const logoutFailed = (message) => {
 };
 
 export const logoutUser = () => (dispatch) => {
-    console.log("Check cookie logout:", Cookies.get('session-id'));
-    dispatch(logoutRequest);
-    Cookies.remove('session-id');
-    localStorage.removeItem('user');
-    dispatch(logoutSuccess())
+    return fetch(baseUrl + 'users/logout', {
+        credentials:'include'
+    })
+    .then(response => response.text())
+    .then(response => {
+        console.log(response);
+        console.log("Check cookie logout:", Cookies.get('session-id'));
+        dispatch(logoutRequest);
+        Cookies.remove('session-id');
+        localStorage.removeItem('user');
+        dispatch(logoutSuccess())
+    })
+
 }
 
 //alert action creators
@@ -267,7 +277,7 @@ export const updateUserAccount = (updateInfo) => (dispatch) => {
     .then(response => { 
         console.log(response.body);
         if (response.success){
-            response.user.image = baseUrl + response.user.image;
+            // response.user.image = baseUrl + response.user.image;
             localStorage.setItem('user', JSON.stringify(response.user));
             dispatch(accountUpdateSuccess(response.user))
             console.log("Update success with response: ", response);

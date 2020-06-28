@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Media, Card,CardBody, CardHeader,CardText, ListGroup, ListGroupItem, Alert  } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 class Home extends Component  {
     // constructor(props) {
@@ -17,12 +18,15 @@ class Home extends Component  {
         return (
             <article key={post._id} className="content-section">
                 <Media>
+                    <Media left>
+                        <img className="rounded-circle account-img" src={post.author.image} alt="Account" />
+                    </Media>
                     <Media body>
                         <div className="article-metadata">
                             <a className="mr-2" href="#">{post.author.username}</a>
                             <small className="text-muted">{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(post.datePosted)))}</small>
                         </div>
-                        <h2><a className="text-dark article-title" href="#">{post.title}</a></h2>
+                        <h2><Link className="text-dark article-title" to={`/post/${post._id}`}>{post.title}</Link></h2>
                         <p className="article-content">{post.content}</p>
                     </Media>
                 </Media>

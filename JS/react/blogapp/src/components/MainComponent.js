@@ -5,6 +5,7 @@ import About from './AboutComponent';
 import Home from './HomeComponent';
 import Account from './AccountComponent';
 import Post from './PostComponent';
+import PostDetails from './PostDetailComponent'
 import { connect } from 'react-redux';
 import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost } from '../redux/ActionCreators';
 
@@ -47,7 +48,7 @@ class Main extends Component {
                 <Home posts = {this.props.posts.posts} 
                 showAlert = {this.props.showAlert}
                 dismissAlert = {this.props.dismissAlert}
-                alertState = {this.props.alertState}
+                alertState = {this.props.alertState} login = {this.props.login}
                 />
             )
         };
@@ -66,6 +67,12 @@ class Main extends Component {
                />
             )
         };
+
+        const PostDetailsPage = ({match}) => {
+            return (
+                <PostDetails  posts = {this.props.posts.posts.filter((post) => post._id === match.params.postId)} />
+            )
+        }
 
         const PrivateRoute =({component: Component, loggedIn, ...rest}) => {
             // console.log("private route", this.props.login.isAuthenticated);
@@ -90,6 +97,7 @@ class Main extends Component {
                     <Route path='/about' component= {About} />
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/account' component= {AccountPage} /> 
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/post' component={PostPage} />
+                    <Route path='/post/:Id' component= {PostDetailsPage} />
                     <Redirect to="/home" />
                 </Switch>
             </div>

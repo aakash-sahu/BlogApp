@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const config = require('../config');
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var Schema = mongoose.Schema;
@@ -16,7 +17,7 @@ var User = new Schema({
     },
     image:{
         type:String,
-        default: 'images/profilePics/default.jpeg' //served at http://localhost:3000/images/profilePics/default.jpeg
+        default: config.serverUrl+ 'images/profilePics/default.jpeg' //served at http://localhost:3000/images/profilePics/default.jpeg
     }
     // posts = [{
     //     type: mongoose.Schema.Types.ObjectId,

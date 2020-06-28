@@ -8,6 +8,7 @@ var passport = require('passport');
 const connectEnsureLogin = require("connect-ensure-login");
 var authenticate = require('../authenticate');
 var User = require('../models/users');
+const config = require('../config');
 // const { router } = require('../app');
 
 //file upload using multer for account update page
@@ -124,7 +125,7 @@ usersRouter.put('/update', upload.single('imageFile'),  (req, res, next) => {
   // console.log(req.file);
   // add file path to the user account
   if (req.file) {
-    req.body.image = req.file.path.slice(7);
+    req.body.image = config.serverUrl+ req.file.path.slice(7);
   } //remove the public part from the path. slice first 7 chars
   if (req.isAuthenticated()) {
     // User.findByIdAndUpdate(req.body._id, {$set:req.body}, {new:true, runValidators:true, useFindAndModify:false})
