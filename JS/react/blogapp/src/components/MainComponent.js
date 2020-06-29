@@ -83,6 +83,7 @@ class Main extends Component {
             return (
                 <PostUpdate post = {this.props.posts.posts.filter((post) => post._id === match.params.postId)[0]} 
                             submitUpdatePost = {this.props.submitUpdatePost} showAlert ={this.props.showAlert} 
+                            isUpdated = {this.props.posts.isUpdated}
                 />
             )
         };

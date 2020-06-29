@@ -2,7 +2,8 @@ import * as ActionTypes from './ActionTypes';
 
 export const Posts = (state = {
     errmess: null,
-    posts:[]
+    posts:[],
+    isUpdated:false
 }, action) => {
     switch(action.type) {
         case ActionTypes.ADD_POSTS:
@@ -17,9 +18,9 @@ export const Posts = (state = {
         case ActionTypes.ADD_POST_FAILED:
             return {...state, errmess:action.message};
         case ActionTypes.UPDATE_POST:
-            return {...state, posts:state.posts.map(post => post._id === action.payload._id? action.payload: post)};
+            return {...state, isUpdated:true, posts:state.posts.map(post => post._id === action.payload._id? action.payload: post)};
         case ActionTypes.UPDATE_POST_FAILED:
-            return {...state, errmess:action.message};
+            return {...state, isUpdated:false, errmess:action.message};
         default:
             return state;
     }

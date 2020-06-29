@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Media, Button} from 'reactstrap';
+import { Media, Button, Modal, ModalBody, ModalHeader} from 'reactstrap';
 import { Redirect ,Link } from 'react-router-dom';
 
 
@@ -7,38 +7,26 @@ class PostDetails extends Component  {
     constructor(props) {
         super(props);
         this.state = {
-            redirectHome: false
+            isDeleteModalOpen: false
         };
         
-    this.setRedirectHome = this.setRedirectHome.bind(this);
-    // this.toggleAccountUpdateModal = this.toggleAccountUpdateModal.bind(this);
+    this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
 
     };
 
-    setRedirectHome = () => {
+    toggleDeleteModal = () => {
         this.setState({
-            redirectHome: true
-        })
+            isDeleteModalOpen: !this.state.isDeleteModalOpen
+        });
     };
 
-    // toggleAccountUpdateModal = () => {
-    //     this.setState({
-    //         isAccountUpdateModalOpen: !this.state.isAccountUpdateModalOpen
-    //     });
-    // };
-
-    handlePostSubmit(values, actions) {
+    async handlePostSubmit(values, actions) {
         console.log("Create Post: "+JSON.stringify(values));
-        this.props.submitPost(values);
-        this.setRedirectHome();
+        await this.props.submitPost(values);
     };
     
     render() {
-        // to redirect the process is doing it through state change
-        if (this.state.redirectHome) {
-            this.props.showAlert("success", "Post added!!");
-            return <Redirect to='/home' />;
-        };
+
         return (
             <React.Fragment>
             <div className="container">
@@ -59,7 +47,7 @@ class PostDetails extends Component  {
                                         {this.props.post.author.username === this.props.user.username ?
                                         <div>
                                         <Link to={`/post/${this.props.post._id}/update`}><Button color="secondary" size="sm" className="mr-1 mb-1">Update</Button></Link>
-                                        <Button color="danger" size="sm"  className="mr-1 mb-1">Delete</Button>
+                                        <Button color="danger" size="sm" className="mr-1 mb-1">Delete</Button>
                                         </div>
                                         :
                                         <div></div>
@@ -74,15 +62,15 @@ class PostDetails extends Component  {
                     </div>
                 </div>
             </div>
-            {/* <Modal isOpen={this.state.isAccountUpdateModalOpen} toggle={this.toggleAccountUpdateModal}>
-                    <ModalHeader className="border-bottom" toggle={this.toggleAccountUpdateModal}>Account Update Status</ModalHeader>
+            <Modal isOpen={this.state.isDeleteModalOpen} toggle={this.toggleDeleteModal}>
+                    <ModalHeader className="border-bottom" toggle={this.toggleDeleteModal}>Account Update Status</ModalHeader>
                     <ModalBody>
                         <p>{this.state.modalMessage}</p>
                         <div className="text-center">
-                            <Button color="primary" onClick={this.toggleAccountUpdateModal} >Close</Button>
+                            <Button color="primary" onClick={this.toggleDeleteModal} >Close</Button>
                         </div>
                     </ModalBody>
-                </Modal> */}
+                </Modal>
             </React.Fragment>
         );
     }

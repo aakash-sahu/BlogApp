@@ -82,6 +82,7 @@ class Header extends Component {
         // alert("Login user: "+JSON.stringify(values));
         // event.preventDefault();
         await this.props.loginUser({username: values.username, password: values.password });
+        console.log("is Auth: ", this.props.login.isAuthenticated);
         if (!this.props.login.isAuthenticated) {
             // console.log(this.props.login.isAuthenticated);
             // console.log(this.props.login.errMess.err);

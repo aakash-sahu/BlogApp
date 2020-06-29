@@ -30,13 +30,17 @@ class PostUpdate extends Component  {
         values._id = this.props.post._id
         console.log("Update Post: "+JSON.stringify(values));
         this.props.submitUpdatePost(values);
+        console.log("isUpdated: ", this.props.isUpdated);
         this.setRedirectHome();
+ 
     };
+//https://stackoverflow.com/questions/53949393/cant-perform-a-react-state-update-on-an-unmounted-component
     
     render() {
         // to redirect the process is doing it through state change
         if (this.state.redirectHome) {
-            this.props.showAlert("success", "Post added!!");
+            this.props.showAlert("success", "Your post was updated!!");
+            // this.props.isUpdated ? this.props.showAlert("success", "Your post was updated!!"):this.props.showAlert("danger", "Your post couldn't be updated!!") ;
             return <Redirect to='/home' />;
         };
         return (

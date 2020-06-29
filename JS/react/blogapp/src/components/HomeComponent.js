@@ -3,15 +3,23 @@ import { Media, Card,CardBody, CardHeader,CardText, ListGroup, ListGroupItem, Al
 import { Link } from 'react-router-dom';
 
 class Home extends Component  {
-    // constructor(props) {
-    //     super(props);
-    // };
+    _isMounted = false;
+    constructor(props) {
+        super(props);
+    };
 
     componentDidMount() {
         // console.log('dismiss alert function', this.props.alertState.visible);
-        if (this.props.alertState.visible)
+        this._isMounted = true;
+        if (this._isMounted){
+            if (this.props.alertState.visible)
             setTimeout(this.props.dismissAlert, 5000);
-    };    
+        }
+    };   
+
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
     render () {
     const posts = this.props.posts.map((post) => {
