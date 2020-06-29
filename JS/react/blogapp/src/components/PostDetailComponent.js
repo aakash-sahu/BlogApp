@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Media, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Media, Button} from 'reactstrap';
 import { Redirect ,Link } from 'react-router-dom';
 
 
@@ -52,13 +52,13 @@ class PostDetails extends Component  {
                                 </Media>
                                 <Media body>
                                     <div className="article-metadata">
-                                        <a className="mr-2" href="#">{this.props.post.author.username}</a>
+                                        <a className="mr-2" href="/home">{this.props.post.author.username}</a>
                                         <small className="text-muted">{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(this.props.post.datePosted)))}</small>
                                     </div>
                                     <div>
                                         {this.props.post.author.username === this.props.user.username ?
                                         <div>
-                                        <Link to="/home"><Button color="secondary" size="sm" className="mr-1 mb-1">Update</Button></Link>
+                                        <Link to={`/post/${this.props.post._id}/update`}><Button color="secondary" size="sm" className="mr-1 mb-1">Update</Button></Link>
                                         <Button color="danger" size="sm"  className="mr-1 mb-1">Delete</Button>
                                         </div>
                                         :

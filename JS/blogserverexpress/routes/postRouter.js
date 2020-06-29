@@ -42,8 +42,26 @@ postRouter.route('/')
     }
 })
 .put((req, res, next) => {
-    res.statusCode = 403;
-    res.end("PUT operation not suppprted right now");
+    console.log(req.isAuthenticated(), req.body);
+    if (req.isAuthenticated()) {
+        // req.body.author = req.user._id; //add id of currently logged user to the body
+        Posts.findByIdAndUpdate(req.body._id, {$set:req.body}, {new:true, useFindAndModify:false})
+        .then((post) => {
+            Posts.findById(post._id)
+            .populate('author')
+            .then((post) => {
+                res.statusCode=200;
+                res.setHeader("Content-Type", "application/json");
+                res.json(post);
+            })
+        }, (err) => next(err))
+        .catch((err) => next(err))
+    }
+    else {
+        err = new Error('Post could not be updated! Try again later!');
+        err.status= 500;
+        return next(err);
+    }
 })
 .delete((req, res, next) => {
     Posts.remove({})

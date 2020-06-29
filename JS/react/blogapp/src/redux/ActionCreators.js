@@ -78,6 +78,47 @@ export const addPostFailed = (errmess) => ({
     payload: errmess
 });
 
+//Update new post
+export const submitUpdatePost = (post) => (dispatch) => {
+
+    return fetch(baseUrl+ 'posts', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(post),
+        credentials: 'include',
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(response);
+                return response
+            } else {
+                var error = new Error('The error status is ' + response.status, ':' + response.statusText);
+                error.response = response;
+                throw error;
+                }
+            },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+            .then(response => response.json())
+            .then(post => dispatch(updatePost(post)))
+            .catch(error => dispatch(updatePostFailed(error.message)));
+};
+
+export const updatePost = (post) => ({
+    type: ActionTypes.UPDATE_POST,
+    payload: post
+});
+
+export const updatePostFailed = (errmess) => ({
+    type: ActionTypes.UPDATE_POST_FAILED,
+    payload: errmess
+});
+
+
 
 //user registration
 export const registerSuccess = (response) => {

@@ -9,16 +9,15 @@ const postSchema = Yup.object().shape({
     content: Yup.string().required("Content is required")
 });
 
-class PostDetails extends Component  {
+class PostUpdate extends Component  {
     constructor(props) {
         super(props);
         this.state = {
             redirectHome: false
         };
         
-    this.handlePostSubmit = this.handlePostSubmit.bind(this);
+    this.handlePostUpdate = this.handlePostUpdate.bind(this);
     this.setRedirectHome = this.setRedirectHome.bind(this);
-    // this.toggleAccountUpdateModal = this.toggleAccountUpdateModal.bind(this);
 
     };
     setRedirectHome = () => {
@@ -27,19 +26,11 @@ class PostDetails extends Component  {
         })
     };
 
-    // toggleAccountUpdateModal = () => {
-    //     this.setState({
-    //         isAccountUpdateModalOpen: !this.state.isAccountUpdateModalOpen
-    //     });
-    // };
-
-    handlePostSubmit(values, actions) {
-        console.log("Create Post: "+JSON.stringify(values));
-        this.props.submitPost(values);
-        // this.props.history.push('/home/');
+    handlePostUpdate(values, actions) {
+        values._id = this.props.post._id
+        console.log("Update Post: "+JSON.stringify(values));
+        this.props.submitUpdatePost(values);
         this.setRedirectHome();
-        // console.log('redirect to home now');
-        // return <Redirect to='/home' />;
     };
     
     render() {
@@ -55,8 +46,8 @@ class PostDetails extends Component  {
                     <div className="col-12 col-md-8 offset-md-2">
                         <div className="content-section">
                         <Formik
-                                initialValues={{ title: '', content:''}}
-                                onSubmit={this.handlePostSubmit} 
+                                initialValues={{ title: this.props.post.title, content:this.props.post.content}}
+                                onSubmit={this.handlePostUpdate} 
                                 validationSchema={postSchema}
                                 enableReinitialize={true} 
                                 >
@@ -95,7 +86,7 @@ class PostDetails extends Component  {
                                             </FormGroup>
                                             {/*revisit later - {status && status.title ? (<div><Alert color="danger">{status.title}</Alert></div>) : <div></div>} */}
                                             <div className="text-right">
-                                                <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting} className="">Create Post</Button>
+                                                <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting} className="">Update Post</Button>
                                             </div>
                                         </Form>
                                     )} 
@@ -105,19 +96,10 @@ class PostDetails extends Component  {
                     </div>
                 </div>
             </div>
-            {/* <Modal isOpen={this.state.isAccountUpdateModalOpen} toggle={this.toggleAccountUpdateModal}>
-                    <ModalHeader className="border-bottom" toggle={this.toggleAccountUpdateModal}>Account Update Status</ModalHeader>
-                    <ModalBody>
-                        <p>{this.state.modalMessage}</p>
-                        <div className="text-center">
-                            <Button color="primary" onClick={this.toggleAccountUpdateModal} >Close</Button>
-                        </div>
-                    </ModalBody>
-                </Modal> */}
             </React.Fragment>
         );
     }
 };
 
 
-export default PostDetails;
+export default PostUpdate;

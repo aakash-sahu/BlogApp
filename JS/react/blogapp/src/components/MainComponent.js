@@ -6,8 +6,10 @@ import Home from './HomeComponent';
 import Account from './AccountComponent';
 import Post from './PostComponent';
 import PostDetails from './PostDetailComponent'
+import PostUpdate from './PostUpdateComponent'
 import { connect } from 'react-redux';
-import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost } from '../redux/ActionCreators';
+import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost,
+        submitUpdatePost } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -26,7 +28,8 @@ const mapDispatchToProps = (dispatch) => ({
     showAlert: (alertType, alertMsg) => dispatch(showAlert(alertType, alertMsg)),
     dismissAlert: () => dispatch(dismissAlert()),
     updateUserAccount: (updateInfo) => dispatch(updateUserAccount(updateInfo)),
-    submitPost: (postContent) => dispatch(submitPost(postContent))
+    submitPost: (postContent) => dispatch(submitPost(postContent)),
+    submitUpdatePost: (updatePostContent) => dispatch(submitUpdatePost(updatePostContent))
 });
 
 class Main extends Component {
@@ -73,7 +76,16 @@ class Main extends Component {
                 <PostDetails  post = {this.props.posts.posts.filter((post) => post._id === match.params.postId)[0]}
                         user = {this.props.login.user}        />
             )
-        }
+        };
+
+        const PostUpdatePage = ({match}) => {
+            // console.log(match.params.postId);
+            return (
+                <PostUpdate post = {this.props.posts.posts.filter((post) => post._id === match.params.postId)[0]} 
+                            submitUpdatePost = {this.props.submitUpdatePost} showAlert ={this.props.showAlert} 
+                />
+            )
+        };
 
         const PrivateRoute =({component: Component, loggedIn, ...rest}) => {
             // console.log("private route", this.props.login.isAuthenticated);
@@ -98,7 +110,8 @@ class Main extends Component {
                     <Route path='/about' component= {About} />
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/account' component= {AccountPage} /> 
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/post' component={PostPage} />
-                    <Route exct path='/post/:postId' component= {PostDetailsPage} />
+                    <Route exact path='/post/:postId' component= {PostDetailsPage} />
+                    <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path ='/post/:postId/update' component={PostUpdatePage} />
                     <Redirect to="/home" />
                 </Switch>
             </div>
