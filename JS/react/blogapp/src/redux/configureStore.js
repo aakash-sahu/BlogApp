@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 // import { Reducer, initialState } from './reducer';
@@ -6,6 +6,7 @@ import { Posts}  from './post'
 import { Registration } from './registrationReducer';
 import { Login } from './loginReducer';
 import { Alert } from './alertReducer';
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
  
 export const ConfigureStore = () => {
     const store = createStore(
@@ -15,7 +16,7 @@ export const ConfigureStore = () => {
             login: Login,
             alertState: Alert 
         }),
-        applyMiddleware(thunk, logger)
+        composeEnhancers(applyMiddleware(thunk, logger))
     );
 
     return store;

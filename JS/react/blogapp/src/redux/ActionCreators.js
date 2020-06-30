@@ -118,6 +118,45 @@ export const updatePostFailed = (errmess) => ({
     payload: errmess
 });
 
+//delete Post
+export const submitDeletePost = (postId) => (dispatch) => {
+
+    return fetch(baseUrl+ 'posts/' +postId , {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        })
+        .then(response => {
+            if (response.ok) {
+                return response
+            } else {
+                var error = new Error('The error status is ' + response.status, ':' + response.statusText);
+                error.response = response;
+                throw error;
+                }
+            },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+            .then(response => response.json())
+            .then(post => dispatch(deletePost(post)))
+            .catch(error => dispatch(deletePostFailed(error.message)));
+};
+
+export const deletePost = (post) => ({
+    type: ActionTypes.DELETE_POST,
+    payload: post
+});
+
+export const deletePostFailed = (errmess) => ({
+    type: ActionTypes.DELETE_POST_FAILED,
+    payload: errmess
+});
+
+
 
 
 //user registration

@@ -21,6 +21,10 @@ export const Posts = (state = {
             return {...state, isUpdated:true, posts:state.posts.map(post => post._id === action.payload._id? action.payload: post)};
         case ActionTypes.UPDATE_POST_FAILED:
             return {...state, isUpdated:false, errmess:action.message};
+        case ActionTypes.DELETE_POST:
+            return {...state, posts:state.posts.filter(post => post._id !== action.payload._id)};
+        case ActionTypes.DELETE_POST_FAILED:
+            return {...state, errmess:action.message};
         default:
             return state;
     }

@@ -4,6 +4,8 @@ export const ADD_POST = "ADD_POST";
 export const ADD_POST_FAILED = "ADD_POST_FAILED";
 export const UPDATE_POST = "UPDATE_POST";
 export const UPDATE_POST_FAILED = "UPDATE_POST_FAILED";
+export const DELETE_POST = "DELETE_POST";
+export const DELETE_POST_FAILED = "DELETE_POST_FAILED";
 
 export const REGISTER_REQUEST = "REGISTER_REQUEST";
 export const REGISTER_USER = "REGISTER_USER";

@@ -9,7 +9,7 @@ import PostDetails from './PostDetailComponent'
 import PostUpdate from './PostUpdateComponent'
 import { connect } from 'react-redux';
 import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost,
-        submitUpdatePost } from '../redux/ActionCreators';
+        submitUpdatePost, submitDeletePost } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -29,7 +29,8 @@ const mapDispatchToProps = (dispatch) => ({
     dismissAlert: () => dispatch(dismissAlert()),
     updateUserAccount: (updateInfo) => dispatch(updateUserAccount(updateInfo)),
     submitPost: (postContent) => dispatch(submitPost(postContent)),
-    submitUpdatePost: (updatePostContent) => dispatch(submitUpdatePost(updatePostContent))
+    submitUpdatePost: (updatePostContent) => dispatch(submitUpdatePost(updatePostContent)),
+    submitDeletePost: (postId) => dispatch(submitDeletePost(postId))
 });
 
 class Main extends Component {
@@ -74,7 +75,8 @@ class Main extends Component {
         const PostDetailsPage = ({match}) => {
             return (
                 <PostDetails  post = {this.props.posts.posts.filter((post) => post._id === match.params.postId)[0]}
-                        user = {this.props.login.user}        />
+                        user = {this.props.login.user} submitDeletePost = {this.props.submitDeletePost}
+                        showAlert ={this.props.showAlert} />
             )
         };
 
