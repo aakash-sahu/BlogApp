@@ -31,3 +31,7 @@
     7.2 Create the db again from within python terminal - from app import db; from app.models import User, Post;db.create_all()
 8. User account - password hash using flask-bcrypt
 9. Login package - flask-login
+10. to paginate - Post.query.paginate() - returns only page 1 which is 20 pages by default. for next page-- Post.query.paginate(page=2)
+to change per page -- Post.query.paginate(per_page=5), posts.total --for number of all posts
+ for page in posts.iter_pages(): -- to show a pages before and after
+...     print(page)
