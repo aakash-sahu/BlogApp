@@ -12,7 +12,7 @@ from PIL import Image
 def home():
     # grab the page we want from query param with default as 1 as -- http://localhost:5000/?page=2
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.paginate(page=page, per_page=2)  # to paginate the response
+    posts = Post.query.paginate(page=page, per_page=3)  # to paginate the response
     return render_template('home.html', posts=posts) # template will have access to posts variable
 
 @app.route("/about")
