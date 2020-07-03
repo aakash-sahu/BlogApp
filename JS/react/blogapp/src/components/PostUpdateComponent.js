@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormGroup, Label, Input, Form, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button, FormGroup, Label, Input, Form } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -64,7 +64,6 @@ class PostUpdate extends Component  {
                                         handleChange,
                                         handleBlur,
                                         handleSubmit,
-                                        handleReset,
                                         isSubmitting
                                     } = props;
                                     return (

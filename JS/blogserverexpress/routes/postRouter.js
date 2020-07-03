@@ -3,19 +3,38 @@ var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const Posts = require('../models/posts');
+const { collection } = require('../models/posts');
 
 var postRouter = express.Router();
 postRouter.use(bodyParser.json());
 
 postRouter.route('/')
 .get((req,res,next) => {
-    Posts.find({})
-    .populate('author')
-    .then((posts) => {
-        res.statusCode=200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(posts);
-    }, (err) => next(err))
+    const page = parseInt(req.query.page)?parseInt(req.query.page):1;
+    // console.log(page);
+    pageSize=5;
+    const skip = (page - 1)*pageSize;
+    Posts.estimatedDocumentCount({})
+    .then((totalCount)=> {
+        totalPages = Math.ceil(totalCount/pageSize);
+        if (page>totalPages) {
+            res.statusCode=404;
+            res.send("Page not found");
+            return;           
+        }
+        Posts.find({})
+        .sort('-datePosted') //sort by date posted descending
+        .skip(skip)
+        .limit(pageSize)
+        .populate('author')
+        .then((posts) => {
+            // console.log(totalPages);
+            res.statusCode=200;
+            res.setHeader("Content-Type", "application/json");
+            res.json({posts: posts, totalPages:totalPages, currentPage:page})
+    
+        }, (err) => next(err))
+    })
     .catch((err) => next(err))
 })
 .post((req, res, next) => {

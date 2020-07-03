@@ -3,14 +3,15 @@ import Cookies from 'js-cookie';
 
 import { baseUrl } from '../shared/baseUrl';
 
-export const fetchPosts = () => (dispatch) => {
-
-    return fetch(baseUrl+ 'posts')
+export const fetchPosts = (pageNum) => (dispatch) => {
+    // console.log("fetch Page query param: ", pageNum);
+    pageNum = parseInt(pageNum) || 1;
+    return fetch(baseUrl+ `posts/?page=${pageNum}`)
         .then(response => {
             if (response.ok) {
-                // console.log(response);
                 return response
             } else {
+                console.log(response);
                 var error = new Error('The error status is ' + response.status, ':' + response.statusText);
                 error.response = response;
                 throw error;

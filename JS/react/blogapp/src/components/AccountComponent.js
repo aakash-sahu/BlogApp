@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormGroup, Label, Input, Form, Alert, Media,Modal, ModalBody, ModalHeader, FormText   } from 'reactstrap';
+import { Button, FormGroup, Label, Input, Form, Media,Modal, ModalBody, ModalHeader, FormText   } from 'reactstrap';
 // import { NavLink, Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -99,7 +99,6 @@ class Account extends Component  {
                                         handleChange,
                                         handleBlur,
                                         handleSubmit,
-                                        handleReset,
                                         isSubmitting,
                                         setFieldValue
                                     } = props;

@@ -29,7 +29,7 @@ class PostDetails extends Component  {
     render() {
         // to redirect the process is doing it through state change
         if (this.state.redirectHome) {
-            this.props.showAlert("success", "Post deleted!!");
+            // this.props.showAlert("success", "Post deleted!!");
             return <Redirect to='/home' />;
         };
 

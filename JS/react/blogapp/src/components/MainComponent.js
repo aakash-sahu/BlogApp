@@ -21,7 +21,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchPosts: () => {dispatch(fetchPosts())},
+    fetchPosts: (pageNum) => {dispatch(fetchPosts(pageNum))},
     registerUser: (registerCreds) => dispatch(registerUser(registerCreds)) ,
     loginUser: (loginCreds) => dispatch(loginUser(loginCreds)),
     logoutUser: () => dispatch(logoutUser()),
@@ -34,12 +34,15 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends Component {
+    // constructor(props) {
+    //     super(props);
+    // }
 
-    componentDidMount() {
-        // this._isMounted = true;
-        this.props.fetchPosts();
-        // this.props.showAlert("success", "page loaded");
-    }
+    // componentDidMount() {
+    //     // this._isMounted = true;
+    //     // this.props.fetchPosts();
+    //     // this.props.showAlert("success", "page loaded");
+    // }
     // componentWillUnmount() {
     //     this._isMounted = false;
     //   }
@@ -47,12 +50,16 @@ class Main extends Component {
     render () {
 
         //Separating the home component
-        const HomePage = () => {
+        const HomePage = ({location}) => {
+            // const params = new URLSearchParams(location.search);
+            // const page = params.get('page');
+            // console.log("Page query param: ", page);
             return (
-                <Home posts = {this.props.posts.posts} 
+                <Home posts = {this.props.posts} 
                 showAlert = {this.props.showAlert}
                 dismissAlert = {this.props.dismissAlert}
                 alertState = {this.props.alertState} login = {this.props.login}
+                location ={location} fetchPosts = {this.props.fetchPosts}
                 />
             )
         };
@@ -97,8 +104,8 @@ class Main extends Component {
                 
                 loggedIn
                 ? <Component {...props} />
-                : <Redirect to={{pathname: '/home', state: { from: props.location}
-                    }} />
+                : <Redirect to={{pathname: '/home'
+                    }} /> //, state: { from: props.location}
             )} />
         )};
 
@@ -109,7 +116,7 @@ class Main extends Component {
                         loginUser = {this.props.loginUser} login = {this.props.login} logoutUser = {this.props.logoutUser}
                         showAlert ={this.props.showAlert}/>
                 <Switch>
-                    <Route path='/home' component = {HomePage}/>
+                    <Route path='/home/' component = {HomePage}/>
                     <Route path='/about' component= {About} />
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/account' component= {AccountPage} /> 
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/post' component={PostPage} />
