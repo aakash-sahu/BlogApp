@@ -55,7 +55,7 @@ class Home extends Component  {
                         </Media>
                         <Media body>
                             <div className="article-metadata">
-                                <Link to ="/home">{post.author.username}</Link>
+                                <Link to ={`/user/${post.author._id}`}>{post.author.username}</Link>
                                 <small className="text-muted ml-2">{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(post.datePosted)))}</small>
                             </div>
                             <h2><Link className="text-dark article-title" to={`/post/${post._id}`}>{post.title}</Link></h2>

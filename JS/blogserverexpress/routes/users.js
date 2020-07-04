@@ -9,6 +9,8 @@ const connectEnsureLogin = require("connect-ensure-login");
 var authenticate = require('../authenticate');
 var User = require('../models/users');
 const config = require('../config');
+const Posts = require('../models/posts');
+const mongoose = require('mongoose');
 // const { router } = require('../app');
 
 //file upload using multer for account update page
@@ -177,5 +179,30 @@ usersRouter.put('/update', upload.single('imageFile'),  (req, res, next) => {
     res.json({success:false, status: 'Update not successful!', err:'You are not authenticated!' });
   }
 });
+
+usersRouter.get('/:userId', (req,res,next) => {
+  // check for object ID not working.. may try again later
+  // userObj = new mongoose.Types.ObjectId(req.params.userId) 
+  // if (mongoose.Types.ObjectId.isValid(userObj)){
+  //   res.statusCode = 403;
+  //   res.end("Not a valid user!!");
+  //   return;
+  // }
+  Posts.find({author: req.params.userId})
+  .sort('-datePosted')
+  .populate('author')
+  .then((posts) => {
+    // console.log(posts);
+    if (posts.length === 0) {
+      res.statusCode = 401;
+      res.end("No posts by this user!!");
+      return;
+    }
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(posts);
+  })
+  .catch((err) => next(err))
+})
 
 module.exports = usersRouter;

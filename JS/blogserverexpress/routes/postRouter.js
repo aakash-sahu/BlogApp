@@ -3,7 +3,6 @@ var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const Posts = require('../models/posts');
-const { collection } = require('../models/posts');
 
 var postRouter = express.Router();
 postRouter.use(bodyParser.json());
@@ -124,6 +123,25 @@ postRouter.route('/:postId').delete((req, res, next) => {
         res.statusCode=401;
         res.end("You are not authenticated!!");
     }
+})
+
+//get by post Id
+postRouter.route('/:postId').get((req, res, next) => {
+
+        Posts.findById(req.params.postId)
+        .populate('author')
+        .then((post) => {
+          // console.log(posts);
+          if (!post) {
+            res.statusCode = 404;
+            res.end("Send correct post id!!");
+            return;
+          }
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json(post);
+        })
+        .catch((err) => next(err))
 })
 
 module.exports = postRouter;

@@ -5,8 +5,9 @@ import About from './AboutComponent';
 import Home from './HomeComponent';
 import Account from './AccountComponent';
 import Post from './PostComponent';
-import PostDetails from './PostDetailComponent'
-import PostUpdate from './PostUpdateComponent'
+import PostDetails from './PostDetailComponent';
+import PostUpdate from './PostUpdateComponent';
+import UserPosts from './UserComponent';
 import { connect } from 'react-redux';
 import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost,
         submitUpdatePost, submitDeletePost } from '../redux/ActionCreators';
@@ -81,9 +82,9 @@ class Main extends Component {
 
         const PostDetailsPage = ({match}) => {
             return (
-                <PostDetails  post = {this.props.posts.posts.filter((post) => post._id === match.params.postId)[0]}
+                <PostDetails  //post = {this.props.posts.posts.filter((post) => post._id === match.params.postId)[0]}
                         user = {this.props.login.user} submitDeletePost = {this.props.submitDeletePost}
-                        showAlert ={this.props.showAlert} />
+                        showAlert ={this.props.showAlert} postId={match.params.postId} />
             )
         };
 
@@ -94,6 +95,12 @@ class Main extends Component {
                             submitUpdatePost = {this.props.submitUpdatePost} showAlert ={this.props.showAlert} 
                             isUpdated = {this.props.posts.isUpdated}
                 />
+            )
+        };
+
+        const UserPostsPage = ({match}) => {
+            return (
+                <UserPosts userId={match.params.userId}/>  //posts={this.props.posts.posts.filter((post) => post.author._id === match.params.userId)}
             )
         };
 
@@ -122,6 +129,7 @@ class Main extends Component {
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path = '/post' component={PostPage} />
                     <Route exact path='/post/:postId' component= {PostDetailsPage} />
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path ='/post/:postId/update' component={PostUpdatePage} />
+                    <Route exact path = '/user/:userId' component={UserPostsPage}/>
                     <Redirect to="/home" />
                 </Switch>
             </div>
