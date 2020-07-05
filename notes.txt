@@ -35,3 +35,9 @@
 to change per page -- Post.query.paginate(per_page=5), posts.total --for number of all posts
  for page in posts.iter_pages(): -- to show a pages before and after
 ...     print(page)
+11. itsdangerous package for timed token - from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+s = Serializer('secret', 30) --create Serializer with secret key 'secret' with expiration time of 30 seconds
+>>> token = s.dumps({'user_id':1}).decode('utf-8') 
+>>> token
+'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU5MzkwNzI5OCwiZXhwIjoxNTkzOTA3MzI4fQ.eyJ1c2VyX2lkIjoxfQ.joUgpyXZhJq4Ec6DZIWPNHRyII4vWyMxWb3RtAdgMS5xjbqqdQ4Kfr1zEtWdfXPqXAuHa0jXs-8mmIryaOxJVw'
+s.loads(token) --gives back user_id:1 if loaded within 30 secs

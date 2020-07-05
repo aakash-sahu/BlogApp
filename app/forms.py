@@ -73,6 +73,27 @@ class PostForm(FlaskForm):
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
 
+
+# reset password form
+class RequestResetForm(FlaskForm):
+    email = StringField('Email', 
+                            validators=[DataRequired(),Email()])
+    submit = SubmitField('Request Password Reset')
+
+    # check if email doesn't request i.e. user doens't have account
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('There is no account with that emai. You must register first!')
+
+# form to reset the password once user identity is verified
+class ResetPasswordForm(FlaskForm):
+    
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', 
+                            validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')
+
 #also need to set a secret key for the cookies
 # In python terminal
 # import secrets
