@@ -133,7 +133,7 @@ usersRouter.put('/update', upload.single('imageFile'),  (req, res, next) => {
     // User.findByIdAndUpdate(req.body._id, {$set:req.body}, {new:true, runValidators:true, useFindAndModify:false})
     if (req.user.username != req.body.username){
       User.findOne({username: req.body.username}, (err, user) => {
-        if (err) {return next(err)}
+        if (err) { next(err)}
         console.log("usr in first block: :", user);
         if (user) {
           res.statusCode = 403;
@@ -145,7 +145,7 @@ usersRouter.put('/update', upload.single('imageFile'),  (req, res, next) => {
     }
    if (req.user.email != req.body.email) {
      User.findOne({email: req.body.email}, (err, user) => {
-        if (err) {return next(err)}
+        if (err) { next(err)}
         // console.log("User in 2nd block: ", user)
         if (user) {
           res.statusCode = 403;
@@ -162,7 +162,7 @@ usersRouter.put('/update', upload.single('imageFile'),  (req, res, next) => {
         req.login(user, (err) => {
           if (err) {
             console.log(err);
-            return next(err);
+             next(err);
           }
           res.statusCode=200;
           res.setHeader("Content-Type", "application/json");

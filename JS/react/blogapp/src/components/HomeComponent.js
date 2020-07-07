@@ -29,7 +29,20 @@ class Home extends Component  {
         // console.log(this.state.paginationArray);
         this.setState({page: page})
         
-    };   
+    };
+    componentDidUpdate() {
+        // console.log('dismiss alert function', this.props.alertState.visible);
+        this._isMounted = true;
+        const params = new URLSearchParams(this.props.location.search);
+        const page = parseInt(params.get('page')) ||1;
+        // console.log("Page query param: ", page, this.props.posts.currentPage, this.props.posts.totalPages);
+        if ((page !== this.props.posts.currentPage)){  // check after putting pagination with Link --&& (this.props.posts.currentPage <= this.props.posts.totalPages) 
+            this.props.fetchPosts(page);
+            // this.setState({page: page})
+        }
+
+        
+    };     
 
     componentWillUnmount() {
         this._isMounted = false;

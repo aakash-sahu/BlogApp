@@ -8,6 +8,7 @@ import Post from './PostComponent';
 import PostDetails from './PostDetailComponent';
 import PostUpdate from './PostUpdateComponent';
 import UserPosts from './UserComponent';
+import FlaskTest from './FlaskComponent';
 import { connect } from 'react-redux';
 import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost,
         submitUpdatePost, submitDeletePost } from '../redux/ActionCreators';
@@ -130,6 +131,7 @@ class Main extends Component {
                     <Route exact path='/post/:postId' component= {PostDetailsPage} />
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path ='/post/:postId/update' component={PostUpdatePage} />
                     <Route exact path = '/user/:userId' component={UserPostsPage}/>
+                    <Route exact path = '/flasktest' component={FlaskTest} />
                     <Redirect to="/home" />
                 </Switch>
             </div>
