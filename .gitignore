@@ -2,3 +2,5 @@
 JS
 __pycache__
 app/site.db
+mail.py
+app/mail.py
