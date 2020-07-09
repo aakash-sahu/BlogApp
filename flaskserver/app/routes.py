@@ -28,7 +28,7 @@ def upload_file():
         print(data.head(2))
         data.to_sql(name='ticker', con=db.engine, index=False, if_exists ='append')
         df = pd.read_sql("select * from ticker", con=db.engine)
-        response = {'success': True, 'message': f'Saved {df.shape} records to database'}
+        response = {'success': True,'ticker':f_name, 'message': f'Saved {df.shape} records to database'}
         return jsonify(response)
 
 @app.route('/get_tickers')
@@ -41,7 +41,8 @@ def get_tickers():
 @app.route('/get_data/<string:ticker>')
 def get_data(ticker):
     print(ticker)
-    df = pd.read_sql(f"select * from ticker where ticker ='{ticker}'", con=db.engine)
-    output = df[['ticker','date', 'open','close']].to_json(orient="records")
+    df = pd.read_sql(f"select * from ticker where ticker ='{ticker}' order by date desc", con=db.engine)
+    df = df.round(2)
+    output = df[['ticker','date', 'open','close','volume']].to_json(orient="records")
     response = {'success': True, 'data': output}
     return jsonify(response)

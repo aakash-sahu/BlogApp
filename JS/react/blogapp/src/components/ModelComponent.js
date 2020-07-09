@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, FormGroup, Label, Input, Form, Table, Col } from 'reactstrap';
+import { Button, FormGroup, Label, Input, Form, Table, Col, Alert } from 'reactstrap';
 // import { Redirect ,Link } from 'react-router-dom';
 import { baseUrl2 } from '../shared/baseUrl';
 import { Formik } from 'formik';
@@ -13,39 +13,47 @@ function RenderTable({tickerData}) {
                     <td>{data.date}</td>
                     <td>{data.open}</td>
                     <td>{data.close}</td>
+                    <td>{data.volume}</td>
                 </tr>
             // </div>
         )
     });
     if (tickerData.length ===0) return <div />
     return (
-        <div className="col-12 col-md-9 offset-md-2">
-            <h3>{tickerData[1].ticker}</h3>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Open</th>
-                        <th>Close</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tickerRows}
-                </tbody>
-            </Table>
-        </div>
-    )
+        <Fragment>
+            <h3 className="text-center">{tickerData[0].ticker}</h3>
+            <div style={{ height: '300px', overflow:'scroll'}}>
+                <Table hover >
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Open</th>
+                            <th>Close</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tickerRows}
+                    </tbody>
+                </Table>
+            </div>
+
+        </Fragment>
+    );
 }
 class Models extends Component  {
     constructor(props) {
         super(props);
         this.state = {
             message: null,
+            tickerUploaded: null,
             tickers: [],
             selectedTicker: null,
             tickerData: []
         };
         this.handleSelectTicker = this.handleSelectTicker.bind(this);
+        this.loadTickers = this.loadTickers.bind(this);
+        this.handleFileSubmit = this.handleFileSubmit.bind(this);
     };
 
     componentDidMount() {
@@ -63,7 +71,7 @@ class Models extends Component  {
         .catch(err => console.log(err))
         
     };
-    handleFileSubmit(values, actions) {
+    handleFileSubmit(values, {resetForm}) {
         console.log("File name: ", values.file.name)
         let data = new FormData()
         data.append('file', values.file)
@@ -72,19 +80,32 @@ class Models extends Component  {
             body: data
         })
         .then(response => response.json())
-        .then(response => console.log(response))
+        .then(response => {
+            console.log(response);
+            this.setState({tickerUploaded:response.ticker});
+            this.loadTickers();
+            resetForm();
+            this.setState({selectedTicker:null, tickerData:[]});
+            alert('File saved');
+        })
     }
 
     handleSelectTicker = (ticker) => {
         this.setState({selectedTicker: ticker});
-        console.log("fetch ticker data: ",ticker.label)
-        fetch(baseUrl2 + 'get_data/' + ticker.label)
-        .then(response => response.json())
-        .then(response => {
-            // console.log(response.data);
-            this.setState({tickerData: JSON.parse(response.data)})
-        })
-        .catch(err => console.log(err))
+        if (ticker) {
+            console.log("fetch ticker data: ",ticker.label)
+            fetch(baseUrl2 + 'get_data/' + ticker.label)
+            .then(response => response.json())
+            .then(response => {
+                // console.log(response.data);
+                this.setState({tickerData: JSON.parse(response.data)})
+            })
+            .catch(err => console.log(err))
+        }
+        else {
+            this.setState({tickerData: []});
+        }
+
     }
     
     render() {
@@ -99,9 +120,10 @@ class Models extends Component  {
                         <Formik
                             initialValues ={{file:null}}
                             onSubmit={this.handleFileSubmit}
+                            
                         >
-                            {(props) => { const { 
-                            values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue } = props;
+                            {(props) => { 
+                                const { handleSubmit, isSubmitting, setFieldValue } = props;
                             return (
                                 <Form className="m-4" onSubmit={handleSubmit}>
                                     <legend>Load and charts the tickers</legend>
@@ -124,14 +146,19 @@ class Models extends Component  {
                     <div className="col-12 col-md-6 mt-4">
                         <h4>Select a ticker to plot </h4>
                         <Select options={ticker_map}
-                        // value={this.state.selectedTicker}
-                        onChange = {this.handleSelectTicker} />
+                        value={this.state.selectedTicker}
+                        onChange = {this.handleSelectTicker}
+                        isClearable={true}
+                        placeholder="Search ticker..." />
                     </div>
-                    <div>
+                </div>
+                <div className="row">
+                    <div className="col-12 col-md-8 mt-2 offset-md-2">
                         <RenderTable tickerData={this.state.tickerData} />
                     </div>
-
                 </div>
+
+
             </div>
             </div>
         );
