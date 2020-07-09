@@ -129,9 +129,9 @@ class Header extends Component {
                                 <NavItem>
                                     <NavLink className="nav-link" to="/about">About</NavLink>
                                 </NavItem>
-                                {/* <NavItem>
-                                    <NavLink className="nav-link" to="/account">Account</NavLink>
-                                </NavItem>                            */}
+                                <NavItem>
+                                    <NavLink className="nav-link" to="/models">Models</NavLink>
+                                </NavItem>                           
                             </Nav>
                             <Nav className="ml-auto" navbar>
                                 {this.props.login.isAuthenticated ?
