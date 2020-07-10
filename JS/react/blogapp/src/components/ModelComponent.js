@@ -1,28 +1,26 @@
 import React, { Component, Fragment } from 'react';
-import { Button, FormGroup, Label, Input, Form, Table, Col, Alert } from 'reactstrap';
+import { Button, FormGroup, Label, Input, Form, Table, Col, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 // import { Redirect ,Link } from 'react-router-dom';
 import { baseUrl2 } from '../shared/baseUrl';
 import { Formik } from 'formik';
 import Select from 'react-select';
+import { Line  } from 'react-chartjs-2';
 
 function RenderTable({tickerData}) {
     const tickerRows = tickerData.map((data, key) => {
         return (
-            // <div key={key}>
-                <tr key ={key}>
-                    <td>{data.date}</td>
-                    <td>{data.open}</td>
-                    <td>{data.close}</td>
-                    <td>{data.volume}</td>
-                </tr>
-            // </div>
+            <tr key ={key}>
+                <td>{data.date}</td>
+                <td>{data.open}</td>
+                <td>{data.close}</td>
+                <td>{data.volume}</td>
+            </tr>
         )
     });
     if (tickerData.length ===0) return <div />
     return (
         <Fragment>
-            <h3 className="text-center">{tickerData[0].ticker}</h3>
-            <div style={{ height: '300px', overflow:'scroll'}}>
+            <div style={{ height: '500px', overflow:'scroll'}}>
                 <Table hover >
                     <thead>
                         <tr>
@@ -49,11 +47,14 @@ class Models extends Component  {
             tickerUploaded: null,
             tickers: [],
             selectedTicker: null,
-            tickerData: []
+            tickerData: [],
+            activeTab: 'charts',
+            chartData: {}
         };
         this.handleSelectTicker = this.handleSelectTicker.bind(this);
         this.loadTickers = this.loadTickers.bind(this);
         this.handleFileSubmit = this.handleFileSubmit.bind(this);
+        this.toggleTab = this.toggleTab.bind(this);
     };
 
     componentDidMount() {
@@ -98,18 +99,44 @@ class Models extends Component  {
             .then(response => response.json())
             .then(response => {
                 // console.log(response.data);
-                this.setState({tickerData: JSON.parse(response.data)})
+                this.setState({tickerData: JSON.parse(response.data)});
+                this.loadChartData(JSON.parse(response.data));
             })
             .catch(err => console.log(err))
         }
         else {
             this.setState({tickerData: []});
         }
+    };
+    
+    toggleTab = (tab) => {
+        if (this.state.activeTab !== tab) {
+            this.setState({activeTab: tab})
+        }
+    };
 
-    }
+    loadChartData = (response) => {
+        response.reverse();
+        let labels = response.map((row) => row.date);
+        let closePrice = response.map((row) => row.close);
+        let volume = response.map((row) => row.volume);
+        let datasets = [
+                            {label:'close', fill:false, data:closePrice, lineTension: 0.1, backgroundColor: 'rgba(75,192,192,0.4)',
+                            borderColor: 'rgba(75,192,192,1)', borderCapStyle: 'butt',borderDash: [],
+                            borderDashOffset: 0.0, borderJoinStyle: 'miter',
+                            pointBorderColor: 'rgba(75,192,192,1)', pointBackgroundColor: '#fff',
+                            pointBorderWidth: 1, pointHoverRadius: 5,
+                            pointHoverBackgroundColor: 'rgba(75,192,192,1)', pointHoverBorderColor: 'rgba(220,220,220,1)',
+                            pointHoverBorderWidth: 2,pointRadius: 1,pointHitRadius: 10}
+                        ]
+        // console.log(labels);
+        this.setState({
+            chartData: {...this.state.chartData, labels, datasets}
+        })
+    };
     
     render() {
-        console.log("ticker data: ",typeof(this.state.tickerData));
+        // console.log("ticker data: ",typeof(this.state.tickerData));
         const ticker_map = this.state.tickers.map((ticker) => ({label:ticker, value:ticker}))
         return (
             <div>
@@ -152,9 +179,40 @@ class Models extends Component  {
                         placeholder="Search ticker..." />
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12 col-md-8 mt-2 offset-md-2">
-                        <RenderTable tickerData={this.state.tickerData} />
+                <div className= "row mt-4">
+                    <div className="col-12 col-md-10 offset-md-1 mt-4">
+                        <h5 className="text-center text-muted mb-2">{this.state.selectedTicker? this.state.selectedTicker.label: "Select a ticker to see charts and data"}</h5>
+                        <Nav tabs>
+                            <NavItem>
+                                <NavLink className={this.state.activeTab === 'charts'? 'active': ''}
+                                    onClick= {()=>{this.toggleTab('charts')}}>
+                                    Charts
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink className={this.state.activeTab === 'data'? 'active': ''}
+                                    onClick= {()=>{this.toggleTab('data')}}>
+                                    Data
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+                        <TabContent activeTab={this.state.activeTab}>
+                            <TabPane tabId="charts">
+                                <div className="row">
+                                    <div className="col-10 offset-md-1 mt-2">
+                                        {this.state.selectedTicker? <Line data={this.state.chartData}/>: null} 
+                                    </div>
+                                </div>
+                            </TabPane>
+                            <TabPane tabId="data">
+                                <div className="row">
+                                    <div className="col-10 offset-md-1 mt-2">
+                                        <RenderTable tickerData={this.state.tickerData} />
+                                    </div>
+                                </div>
+                            </TabPane>
+                        </TabContent>
+                        
                     </div>
                 </div>
 
