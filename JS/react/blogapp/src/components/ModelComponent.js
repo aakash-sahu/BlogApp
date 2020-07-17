@@ -8,7 +8,7 @@ import Select from 'react-select';
 import { Line, Bar  } from 'react-chartjs-2';
 import { TickerLoading } from './LoadingComponent';
 
-function RenderTable({tickerData}) {
+function RenderTable({tickerData, isPredictionLoaded}) {
     const tickerRows = tickerData.map((data, key) => {
         return (
             <tr key ={key}>
@@ -16,6 +16,7 @@ function RenderTable({tickerData}) {
                 <td>{data.open}</td>
                 <td>{data.close}</td>
                 <td>{data.volume}</td>
+                {isPredictionLoaded ?<td>{data.type}</td>:null}
             </tr>
         )
     });
@@ -30,6 +31,7 @@ function RenderTable({tickerData}) {
                             <th>Open</th>
                             <th>Close</th>
                             <th>Volume</th>
+                            {isPredictionLoaded ?<th>Type</th>:null}
                         </tr>
                     </thead>
                     <tbody>
@@ -53,12 +55,16 @@ class Models extends Component  {
             activeTab: 'charts',
             chartData: {},
             isTickerLoading: false,
-            isAllTickersLoading:false
+            isTickerLoaded: false,
+            isAllTickersLoading:false,
+            isPredictionLoaded:false,
+            isPredictionLoading:false
         };
         this.handleSelectTicker = this.handleSelectTicker.bind(this);
         this.loadTickers = this.loadTickers.bind(this);
         this.handleFileSubmit = this.handleFileSubmit.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
+        this.handleGetPredictions = this.handleGetPredictions.bind(this);
     };
 
     componentDidMount() {
@@ -105,9 +111,11 @@ class Models extends Component  {
             fetch(baseUrl2 + 'get_data/' + ticker.label)
             .then(response => response.json())
             .then(response => {
+                if (response.success) {
                 // console.log(response.data);
-                this.setState({tickerData: JSON.parse(response.data), isTickerLoading:false});
-                this.loadChartData(JSON.parse(response.data));
+                this.setState({tickerData: JSON.parse(response.data), isTickerLoading:false, isTickerLoaded:true, isPredictionLoaded:false}); //.concat(JSON.parse(response.predictions))
+                this.loadChartData(response);
+                }
             })
             .catch(err => console.log(err))
         }
@@ -122,11 +130,13 @@ class Models extends Component  {
         }
     };
 
-    loadChartData = (response) => {
-        response.reverse();
-        let labels = response.map((row) => row.date);
-        let closePrice = response.map((row) => row.close);
-        let volume = response.map((row) => row.volume/100000);
+    loadChartData = ({data}) => {
+        data = JSON.parse(data);
+        data.reverse();
+        let labels = data.map((row) => row.date);
+        let closePrice = data.map((row) => row.close);
+        let volume = data.map((row) => row.volume/100000);
+
         let datasets = [
                             {type:'line', label:'close',  data:closePrice,  fill: false,
                             borderColor: '#EC932F',
@@ -137,27 +147,82 @@ class Models extends Component  {
                             pointHoverBorderColor: '#71B37C',
                             yAxisID: 'y-axis-2', pointRadius: 0, pointHitRadius:5 },
 
-                            {type:'bar', label:'volume (100k)',  data:volume,  yAxisID: 'y-axis-1',       fill: false,
+                            {type:'bar', label:'volume (100k)',  data:volume,  yAxisID: 'y-axis-1', fill: false,
                             backgroundColor: '#71B37C',
                             borderColor: '#71B37C',
                             hoverBackgroundColor: '#71B37C',
                             hoverBorderColor: '#71B37C',
                             yAxisID: 'y-axis-1'},
-                            
-                            // {type:'line', label:'close',  data:[60,60,60,60,61,62],  fill: false,
-                            // borderColor: '#777',
-                            // backgroundColor: '#EC932F',
-                            // pointBorderColor: '#EC932F',
-                            // pointBackgroundColor: '#EC932F',
-                            // pointHoverBackgroundColor: '#71B37C',
-                            // pointHoverBorderColor: '#71B37C',
-                            // yAxisID: 'y-axis-2', pointRadius: 0, pointHitRadius:5 },
                         ]
         // console.log(labels);
         this.setState({
-            chartData: {...this.state.chartData, labels, datasets}
+            chartData: {...this.state.chartData, labels,  datasets}
         })
     };
+
+    handleGetPredictions = () => {
+        this.setState({isPredictionLoading: true});
+        fetch(baseUrl2 + 'get_predictions/' + this.state.selectedTicker.label)
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                let data = JSON.parse(response.data);
+                data.reverse();
+                let labels = data.map((row) => row.date);
+                const actualData=data.filter((row) => row.type === 'Actual');
+                // let labels = actualData.map((row) => row.date);
+                let closePrice = actualData.map((row) => row.close);
+                let volume = actualData.map((row) => row.volume/100000);
+        
+                const predData=data.filter((row) => row.type === 'pred');
+                // let predlabels = predData.map((row) => row.date);
+                let predclosePrice = predData.map((row) => row.close);predclosePrice = (new Array(closePrice.length)).concat(predclosePrice);
+                let predVolume = predData.map((row) => (row.volume)/100000);predVolume = (new Array(volume.length)).concat(predVolume);
+        
+                let datasets = [
+                                    {type:'line', label:'close',  data:closePrice,  fill: false,
+                                    borderColor: '#EC932F',
+                                    backgroundColor: '#EC932F',
+                                    pointBorderColor: '#EC932F',
+                                    pointBackgroundColor: '#EC932F',
+                                    pointHoverBackgroundColor: '#71B37C',
+                                    pointHoverBorderColor: '#71B37C',
+                                    yAxisID: 'y-axis-2', pointRadius: 0, pointHitRadius:5 },
+        
+                                    {type:'bar', label:'volume (100k)',  data:volume,  yAxisID: 'y-axis-1', fill: false,
+                                    backgroundColor: '#71B37C',
+                                    borderColor: '#71B37C',
+                                    hoverBackgroundColor: '#71B37C',
+                                    hoverBorderColor: '#71B37C',
+                                    yAxisID: 'y-axis-1'},
+                                    
+                                    {type:'line', label:'predClose',  data:predclosePrice,  fill: false,
+                                    borderColor: '#777',
+                                    backgroundColor: '#EC932F',
+                                    pointBorderColor: '#EC932F',
+                                    pointBackgroundColor: '#EC932F',
+                                    pointHoverBackgroundColor: '#71B37C',
+                                    pointHoverBorderColor: '#71B37C',
+                                    yAxisID: 'y-axis-2', pointRadius: 0, pointHitRadius:5 },
+        
+                                    {type:'bar', label:'predVolume',  data:predVolume,  fill: false,
+                                    backgroundColor: '#666',
+                                    borderColor: '#71B37C',
+                                    hoverBackgroundColor: '#71B37C',
+                                    hoverBorderColor: '#71B37C',
+                                    yAxisID: 'y-axis-1'},
+                                ]
+                // console.log(labels);
+                this.setState({
+                    chartData: {...this.state.chartData, labels,  datasets}, tickerData: data, isPredictionLoaded:true, 
+                    isPredictionLoading:false
+                })
+            }
+        })
+        .catch(err => console.log(err))
+
+    };
+
     
     render() {
         const options = {
@@ -263,7 +328,7 @@ class Models extends Component  {
                 </div>
                 <div className="row mt-4">
                     <div className="col-12 col-md-6 mt-4">
-                        <h4>Select a ticker {this.state.isAllTickersLoading? <TickerLoading/>:null } </h4>
+                        <h4>Select a ticker {this.state.isAllTickersLoading ? <TickerLoading/>:null } </h4>
                         <Select options={ticker_map}
                         value={this.state.selectedTicker}
                         onChange = {this.handleSelectTicker}
@@ -274,10 +339,18 @@ class Models extends Component  {
                 <div className= "row mt-4">
                     <div className="col-12 col-md-10 offset-md-1 mt-4">
                         <h5 className="text-center text-muted mb-2">
-                            {this.state.selectedTicker? this.state.selectedTicker.label: "Select a ticker to see charts and data"}
-                            {this.state.isTickerLoading? <TickerLoading/>:null }
+                                {this.state.selectedTicker? this.state.selectedTicker.label: "Select a ticker to see charts and data"}
+                                {this.state.isTickerLoading? <TickerLoading/>:null }
                         </h5>
-                        {/* Removing the loading component from here as the chart transition is not smooth */}
+                        <div className="row">
+                            {this.state.isTickerLoaded? 
+                            <div>{this.state.isPredictionLoaded?
+                                <Button color="secondary" size="sm" className="m-1" onClick={() => {this.handleSelectTicker(this.state.selectedTicker)}}>Hide Predictions</Button>:
+                                <Button color="primary" size="sm" className="m-1" onClick={this.handleGetPredictions}>Show predictions</Button>}
+                                    {this.state.isPredictionLoading? <TickerLoading msg="Running auto ARIMA..."/>:null }
+                                    </div>
+                            :null }
+                        </div>
                         <Nav tabs>
                             <NavItem>
                                 <NavLink className={this.state.activeTab === 'charts'? 'active': ''}
@@ -306,7 +379,7 @@ class Models extends Component  {
                             <TabPane tabId="data">
                                 <div className="row">
                                     <div className="col-10 offset-md-1 mt-2">
-                                        <RenderTable tickerData={this.state.tickerData} />
+                                        <RenderTable tickerData={this.state.tickerData} isPredictionLoaded={this.state.isPredictionLoaded} />
                                     </div>
                                 </div>
                             </TabPane>

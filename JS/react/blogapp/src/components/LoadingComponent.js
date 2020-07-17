@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 export const Loading = () => {
     return(
@@ -9,8 +9,11 @@ export const Loading = () => {
     );
 };
 
-export const TickerLoading = () => {
+export const TickerLoading = ({msg}) => {
     return(
-        <span className="fa fa-spinner fa-pulse fa-fw text-primary"></span>
+        <Fragment className= "ml-5">
+            <span className="fa fa-spinner fa-pulse fa-fw text-primary"></span>
+            <small className="text-muted">{msg}</small>
+        </Fragment>
     );
 };
