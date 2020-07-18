@@ -1,9 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from flask_login import current_user
-# Form elements come from wtform
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_login import current_user
 from app.models import User
 
 #python classes as forms which will convert to HTML on execution
@@ -67,13 +66,6 @@ class UpdateAccountForm(FlaskForm):
             if email:
                 raise ValidationError('That email is taken. Please choose a different one')
 
-# Form to create posts
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
-
-
 # reset password form
 class RequestResetForm(FlaskForm):
     email = StringField('Email', 
@@ -93,9 +85,3 @@ class ResetPasswordForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', 
                             validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
-
-#also need to set a secret key for the cookies
-# In python terminal
-# import secrets
-#>>> secrets.token_hex(16)
-#'656dd199eb5c5c86d449ae28f3d0fcc8' -- can make it env var later

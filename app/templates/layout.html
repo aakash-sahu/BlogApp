@@ -26,18 +26,18 @@
                 <a class="navbar-brand mr-4" href="#">Blog Space</a>
                 <div class="collapse navbar-collapse" id="Navbar">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.about') }}">About</a></li>
                     </ul>
                     <ul class="navbar-nav">
                         {% if current_user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('new_post') }}"><span class="fa fa-file-text-o"></span>New Post</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('account') }}"><span class="fa fa-user-circle-o"></span>Account</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><span class="fa fa-sign-out"></span>Logout</a></li>                    
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('posts.new_post') }}"><span class="fa fa-file-text-o"></span>New Post</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('users.account') }}"><span class="fa fa-user-circle-o"></span>Account</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('users.logout') }}"><span class="fa fa-sign-out"></span>Logout</a></li>                    
                         {% else %}
 
-                                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}"><span class="fa fa-sign-in"></span> Login</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}""><span class="fa fa-circle"></span> Register</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('users.login') }}"><span class="fa fa-sign-in"></span> Login</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('users.register') }}""><span class="fa fa-circle"></span> Register</a></li>
                         {% endif %}
                     </ul>
                 </div>
