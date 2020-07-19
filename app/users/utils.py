@@ -1,9 +1,9 @@
 import os
 import secrets
 from PIL import Image
-from flask import url_for
+from flask import url_for, current_app
 from flask_mail import Message
-from app import app, mail
+from app import mail
 
 
 # function to save picture in database
@@ -13,7 +13,7 @@ def save_picture(form_picture):
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     # add picture to root path of application + profile photo folder
-    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    picture_path = os.path.join(current_app.root_path, 'static/profile_pics', picture_fn)
     ##resize picuture before saving to save space on file system and increase load speed of page
     output_size = (125,125)
     i = Image.open(form_picture)

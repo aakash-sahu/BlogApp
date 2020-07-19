@@ -1,6 +1,7 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer # for timed token for password forget
-from app import db, login_manager, app
+from flask import current_app
+from app import db, login_manager
 from flask_login import UserMixin #this adds isauthenticated, isactive and other methods to us
 
 # for login as per documentation of login_manager
@@ -23,12 +24,12 @@ class User(db.Model, UserMixin):
 
     # password reset
     def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8') #include payload of user id
     
     @staticmethod
     def verify_reset_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']
         except:
