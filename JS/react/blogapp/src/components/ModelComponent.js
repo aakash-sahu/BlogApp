@@ -94,7 +94,7 @@ class Models extends Component  {
         })
         .then(response => response.json())
         .then(response => {
-            console.log(response);
+            // console.log(response);
             this.setState({tickerUploaded:response.ticker});
             this.loadTickers();
             resetForm();
@@ -315,7 +315,8 @@ class Models extends Component  {
                                                 </Col>
                                             </FormGroup>
                                             <div className="ml-3">
-                                                <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Upload</Button>
+                                                <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting || !this.props.isAuthenticated}>Upload</Button>
+                                                <div>{this.props.isAuthenticated?null:<small className="text-danger">You need to be logged in to upload data!</small>}</div>
                                             </div>
                                         </Form>
                                     )}
@@ -333,6 +334,7 @@ class Models extends Component  {
                         value={this.state.selectedTicker}
                         onChange = {this.handleSelectTicker}
                         isClearable={true}
+                        isLoading= {this.state.isTickerLoading}
                         placeholder="Search ticker..." />
                     </div>
                 </div>
@@ -343,9 +345,10 @@ class Models extends Component  {
                                 {this.state.isTickerLoading? <TickerLoading/>:null }
                         </h5>
                         <div className="row">
-                            {this.state.isTickerLoaded? 
-                            <div>{this.state.isPredictionLoaded?
-                                <Button color="secondary" size="sm" className="m-1" onClick={() => {this.handleSelectTicker(this.state.selectedTicker)}}>Hide Predictions</Button>:
+                            {this.state.isTickerLoaded && this.state.selectedTicker? 
+                            <div>{this.state.isPredictionLoaded ?
+                                <Button color="secondary" size="sm" className="m-1" onClick={() => {this.handleSelectTicker(this.state.selectedTicker)}}>Hide Predictions</Button>
+                                :
                                 <Button color="primary" size="sm" className="m-1" onClick={this.handleGetPredictions}>Show predictions</Button>}
                                     {this.state.isPredictionLoading? <TickerLoading msg="Running auto ARIMA..."/>:null }
                                     </div>

@@ -8,6 +8,9 @@ import os
 # from statsmodels.tsa.arima_model import ARIMA, ARMA
 # from flask_cors import cross_origin
 import pmdarima as pmd
+from .ML.char_pred import get_char_predictions, load_model
+#load model
+model = load_model(os.path.join(os.getcwd(),'app', 'ML','rnn_20_epoch_cp.net'))
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 ALLOWED_EXTENSIONS = {'txt', 'csv'}
@@ -102,3 +105,13 @@ def get_predictions(ticker):
     # predictions = predict_df[['ticker','date', 'open','close','volume']].to_json(orient="records")
     response = {'success': True, 'data': output}
     return jsonify(response)
+
+@app.route('/get_char_preds', methods=["POST"])
+def get_char_preds():
+    if request.method == "POST":
+        prime = request.json['prime']
+        num_chars = request.json.get('num_chars', 10)
+        print(prime, num_chars)
+        pred = get_char_predictions(model, num_chars, prime=prime)
+        response = {'success':True, 'pred':pred}
+        return jsonify(response)

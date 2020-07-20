@@ -9,6 +9,7 @@ import PostDetails from './PostDetailComponent';
 import PostUpdate from './PostUpdateComponent';
 import UserPosts from './UserComponent';
 import Models from './ModelComponent';
+import CharLSTM from './CharLSTMComponent';
 import { connect } from 'react-redux';
 import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost,
         submitUpdatePost, submitDeletePost } from '../redux/ActionCreators';
@@ -131,7 +132,8 @@ class Main extends Component {
                     <Route exact path='/post/:postId' component= {PostDetailsPage} />
                     <PrivateRoute loggedIn={this.props.login.isAuthenticated} exact path ='/post/:postId/update' component={PostUpdatePage} />
                     <Route exact path = '/user/:userId' component={UserPostsPage}/>
-                    <Route exact path = '/models' component={Models} />
+                    <Route exact path = '/models' component={() => <Models isAuthenticated={this.props.login.isAuthenticated}/>} />
+                    <Route exact path = '/char-model' component={CharLSTM} />
                     <Redirect to="/home" />
                 </Switch>
             </div>
