@@ -11,7 +11,7 @@ export const Loading = () => {
 
 export const TickerLoading = ({msg}) => {
     return(
-        <Fragment className= "ml-5">
+        <Fragment>
             <span className="fa fa-spinner fa-pulse fa-fw text-primary"></span>
             <small className="text-muted">{msg}</small>
         </Fragment>

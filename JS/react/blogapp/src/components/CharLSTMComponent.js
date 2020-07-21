@@ -1,53 +1,77 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FormGroup, Label, Input, Form } from 'reactstrap';
 import { baseUrl2 } from '../shared/baseUrl';
 import { TickerLoading } from './LoadingComponent';
-import { POSTS_FAILED } from '../redux/ActionTypes';
 
 //creating this page using react hooks
 export default function CharLSTM() {
 
     const [inputText, setInputText] = useState("");
     const [outputText, setoutputText] = useState("");
+    const [showSpinner, setSpinner] = useState(false);
 
     function handleInputTextChange(event) {
         setInputText(event.target.value);
+        const input = {prime: inputText, num_chars: 5*inputText.length + 20 };
+        if (inputText.length >=5 && inputText.length % 3 ===0) {
+            setSpinner(true);
+            fetch(baseUrl2 + 'get_char_preds', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(input)
+            })
+            .then(response => response.json())
+            .then(response => {
+                setoutputText(response.pred);
+                setSpinner(false);
+            })
+            .catch(err => console.log(err))
+        }
+        if (inputText.length ===0){
+            setoutputText('');
+        }
     };
 
-    useEffect ( () => {
-        const input = {prime: inputText, num_chars: 5*inputText.length + 20 };
-        console.log(JSON.stringify(input));
-        fetch(baseUrl2 + 'get_char_preds', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(input)
-        })
-        .then(response => response.json())
-        .then(response => {
-            setoutputText(response.pred)
-        })
-        .catch(err => console.log(err))
-    }, [inputText])
+    // Getting server response using useEffect Hook
+    // useEffect ( () => {
+    //     const input = {prime: inputText, num_chars: 5*inputText.length + 20 };
+    //     console.log(JSON.stringify(input));
+    //     if (inputText.length >=5 && inputText.length % 3 ===0) {
+    //         fetch(baseUrl2 + 'get_char_preds', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(input)
+    //         })
+    //         .then(response => response.json())
+    //         .then(response => {
+    //             setoutputText(response.pred)
+    //         })
+    //         .catch(err => console.log(err))
+    //     }
+    // }, [inputText])
 
     return (
-        <div classname="container">
+        <div className="container">
             <div className="row">
                 <div className="col-12 col-md-8 offset-md-2">
                     <Form>
-                        <h4>Char LSTM model</h4>
-                        <p>The Char LSTM model was trained on "Crime and Punishment" and predicts the next character based on
-                            what has been typed in the input box.
+                        <h3>Text Generator (LSTM)</h3>
+                        <p>Using the text of <a href="https://www.gutenberg.org/files/2554/2554-h/2554-h.htm" target="_blank" rel="noopener noreferrer">Crime and Punishment</a> a character generation 
+                        LSTM model was trained to predict the next character based on what has been typed in the input box.
                         </p>
                         <FormGroup>
-                            <Label for="inputText">Type here</Label>
+                            <Label for="inputText">Input</Label>
                             <Input type="textarea" name="inputText" id="inputText" value= {inputText} 
-                            onChange={handleInputTextChange} rows="5" />
+                            onChange={handleInputTextChange} rows="5" placeholder="Start typing here..." />
                         </FormGroup>
                         <FormGroup>
-                            <Label for="outputText">Output shows here</Label>
-                            <Input type="textarea" name="outputText" id="outputText" disabled value={outputText} rows="10"/>
+                            <Label for="outputText">Model Output </Label>{showSpinner ? <TickerLoading msg={"Generating output..."}/>:null }
+                            <Input type="textarea" name="outputText" id="outputText" disabled value={outputText} 
+                            rows="10" placeholder="Model output here..."/>
                         </FormGroup>
                     </Form>
                 </div>

@@ -5,7 +5,7 @@ import { Button, FormGroup, Label, Input, Form, Table, Col, TabContent, TabPane,
 import { baseUrl2 } from '../shared/baseUrl';
 import { Formik } from 'formik';
 import Select from 'react-select';
-import { Line, Bar  } from 'react-chartjs-2';
+import { Bar  } from 'react-chartjs-2';
 import { TickerLoading } from './LoadingComponent';
 
 function RenderTable({tickerData, isPredictionLoaded}) {
@@ -311,7 +311,7 @@ class Models extends Component  {
                                                 <Col sm={6}>
                                                     <Input type="file" name="file" id="file"
                                                     onChange = {(event => {setFieldValue("file", event.currentTarget.files[0])})} />
-                                                    <FormText color="muted">Upload csv file for ticker from yahoo finance</FormText>
+                                                    <FormText color="muted">Upload csv file for a ticker from <a href="https://finance.yahoo.com/quote/MSFT/history?p=MSFT" target="_blank" rel="noopener noreferrer">yahoo finance</a></FormText>
                                                 </Col>
                                             </FormGroup>
                                             <div className="ml-3">

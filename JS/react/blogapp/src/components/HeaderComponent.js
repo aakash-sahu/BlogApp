@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, NavbarBrand, NavItem, Nav, NavbarToggler, Collapse, Button, Modal, ModalBody, ModalHeader,
-        FormGroup, Label, Input, Form, Alert  } from 'reactstrap';
+        FormGroup, Label, Input, Form, Alert, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem  } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -129,9 +129,19 @@ class Header extends Component {
                                 <NavItem>
                                     <NavLink className="nav-link" to="/about">About</NavLink>
                                 </NavItem>
-                                <NavItem>
-                                    <NavLink className="nav-link" to="/models">Models</NavLink>
-                                </NavItem>                           
+                                <UncontrolledDropdown nav inNavbar>
+                                    <DropdownToggle nav caret>
+                                        Models
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem>
+                                            <NavLink to="/models" className="text-decoration-none">Stock Charts &amp; Prediction</NavLink>
+                                        </DropdownItem>
+                                        <DropdownItem>
+                                            <NavLink to="/char-model" className="text-decoration-none">Text Generator</NavLink>
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </UncontrolledDropdown>                                    
                             </Nav>
                             <Nav className="ml-auto" navbar>
                                 {this.props.login.isAuthenticated ?

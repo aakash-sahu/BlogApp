@@ -19,7 +19,7 @@ def get_preds(x, num_days):
     # model = ARMA(x, order=(2,5))
     # model = model.fit(disp=-1)
     # return model.forecast(num_days)[0]
-    model = pmd.auto_arima(x, start_p=1, start_q=1, test="adf", seasonal=False, m=2,error_action="ignore")
+    model = pmd.auto_arima(x, start_p=1, start_q=1, test="adf", seasonal=False, error_action="ignore")
     return model.predict(30).tolist()
 
 
