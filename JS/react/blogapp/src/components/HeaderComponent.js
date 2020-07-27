@@ -140,6 +140,9 @@ class Header extends Component {
                                         <DropdownItem>
                                             <NavLink to="/char-model" className="text-decoration-none">Text Generator</NavLink>
                                         </DropdownItem>
+                                        <DropdownItem>
+                                            <NavLink to="/digit-recog" className="text-decoration-none">Digit Recognition</NavLink>
+                                        </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledDropdown>                                    
                             </Nav>

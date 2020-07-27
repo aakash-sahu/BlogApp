@@ -29,7 +29,7 @@ export default function CharLSTM() {
             })
             .catch(err => console.log(err))
         }
-        if (inputText.length ===0){
+        if (inputText.length === 0){
             setoutputText('');
         }
     };
@@ -59,17 +59,17 @@ export default function CharLSTM() {
             <div className="row">
                 <div className="col-12 col-md-8 offset-md-2">
                     <Form>
-                        <h3>Text Generator (LSTM)</h3>
+                        <h3>Text Generation with LSTM</h3>
                         <p>Using the text of <a href="https://www.gutenberg.org/files/2554/2554-h/2554-h.htm" target="_blank" rel="noopener noreferrer">Crime and Punishment</a> a character generation 
-                        LSTM model was trained to predict the next character based on what has been typed in the input box.
+                        LSTM model build using PyTorch was trained to predict the next character based on what has been typed in the input box.
                         </p>
                         <FormGroup>
-                            <Label for="inputText">Input</Label>
+                            <Label for="inputText" className="font-weight-bold">Input</Label>
                             <Input type="textarea" name="inputText" id="inputText" value= {inputText} 
-                            onChange={handleInputTextChange} rows="5" placeholder="Start typing here..." />
+                            onChange={handleInputTextChange} rows="5" placeholder="Type atleast 5 characters here..." />
                         </FormGroup>
                         <FormGroup>
-                            <Label for="outputText">Model Output </Label>{showSpinner ? <TickerLoading msg={"Generating output..."}/>:null }
+                            <Label for="outputText" className="font-weight-bold">Model Output </Label>{showSpinner ? <TickerLoading msg={"Generating output..."}/>:null }
                             <Input type="textarea" name="outputText" id="outputText" disabled value={outputText} 
                             rows="10" placeholder="Model output here..."/>
                         </FormGroup>

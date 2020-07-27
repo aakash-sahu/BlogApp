@@ -13,6 +13,7 @@ import CharLSTM from './CharLSTMComponent';
 import { connect } from 'react-redux';
 import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost,
         submitUpdatePost, submitDeletePost } from '../redux/ActionCreators';
+import Board from './DigitRecogComponent';
 
 const mapStateToProps = state => {
     return {
@@ -134,6 +135,7 @@ class Main extends Component {
                     <Route exact path = '/user/:userId' component={UserPostsPage}/>
                     <Route exact path = '/models' component={() => <Models isAuthenticated={this.props.login.isAuthenticated}/>} />
                     <Route exact path = '/char-model' component={CharLSTM} />
+                    <Route exact path = '/digit-recog' component={Board} />
                     <Redirect to="/home" />
                 </Switch>
             </div>

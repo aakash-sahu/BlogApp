@@ -5,12 +5,17 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 # from statsmodels.tsa.arima_model import ARIMA, ARMA
 # from flask_cors import cross_origin
 import pmdarima as pmd
 from .ML.char_pred import get_char_predictions, load_model
-#load model
+# load model
 model = load_model(os.path.join(os.getcwd(),'app', 'ML','rnn_20_epoch_cp.net'))
+
+# CNN digit model
+from .ML.digit_pred import load_cnn_model, cnn_digit_predictions
+digit_cnn = load_cnn_model(os.path.join(os.getcwd(),'app', 'ML','mnist_cnn_as.pt'))
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 ALLOWED_EXTENSIONS = {'txt', 'csv'}
@@ -113,5 +118,17 @@ def get_char_preds():
         num_chars = request.json.get('num_chars', 10)
         print(prime, num_chars)
         pred = get_char_predictions(model, num_chars, prime=prime)
+        response = {'success':True, 'pred':pred}
+        return jsonify(response)
+
+
+@app.route('/digit_recog', methods=['POST'])
+def digit_recog():
+    if request.method == "POST":
+        print(len([request.json]))
+        image = np.array([request.json] ,  dtype=np.float32).reshape(28,28)
+        plt.imsave('digit.png', image, cmap='gray')
+        pred = cnn_digit_predictions(digit_cnn, image)
+        print(pred)
         response = {'success':True, 'pred':pred}
         return jsonify(response)
