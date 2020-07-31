@@ -1,4 +1,5 @@
 node_modules
-sessions
-public/images/profilePics
+sessions/*
+public/images/profilePics/*
+!public/images/profilePics/default.jpeg
 package-lock.json

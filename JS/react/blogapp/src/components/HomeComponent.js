@@ -16,8 +16,8 @@ class Home extends Component  {
         // console.log('dismiss alert function', this.props.alertState.visible);
         this._isMounted = true;
         if (this._isMounted){
-            if (this.props.alertState.visible)
-            setTimeout(this.props.dismissAlert, 2000);
+            // if (this.props.alertState.visible)
+            // setTimeout(this.props.dismissAlert, 2000);
         }
         const params = new URLSearchParams(this.props.location.search);
         const page = parseInt(params.get('page')) ||1;
@@ -39,9 +39,7 @@ class Home extends Component  {
         if ((page !== this.props.posts.currentPage)){  // check after putting pagination with Link --&& (this.props.posts.currentPage <= this.props.posts.totalPages) 
             this.props.fetchPosts(page);
             // this.setState({page: page})
-        }
-
-        
+        }  
     };     
 
     componentWillUnmount() {

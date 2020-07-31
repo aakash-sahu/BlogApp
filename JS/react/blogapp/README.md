@@ -67,3 +67,5 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 mongod --dbpath=data --bind_ip 127.0.0.1
+
+"start": "SET PORT=3001 && react-scripts start",
