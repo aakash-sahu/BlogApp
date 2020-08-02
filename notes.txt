@@ -49,9 +49,9 @@ s.loads(token) --gives back user_id:1 if loaded within 30 secs
     -- get ip address - 172.24.3.85 (hostname -I)
     -- open port 80 - sudo ufw allow http/tcp
     -- to delete sudo ufw delete allow 5000
-    -- restart nginx - sudo systemctl restart nginx (on wsl sudo service restart nginx)
+    -- restart nginx - sudo systemctl restart nginx (on wsl sudo service nginx restart --to stop  option stop)
     -- open app in public ip - will serve static files
-    -- now run gunicorn in the same directory of app - gunicorn -w 3 run:app
+    -- now run gunicorn in the same directory of app - gunicorn -w 3 run:app -- gunicorn runs on port 8000
     - check number pf cores - nproc --all
     -- to run the app all time, auto restarts, monitor gunicorn - use supervisor
     -- sudo apt install supervisor and add conf file at sudo nano /etc/supervisor/conf.d/blogapp.conf
