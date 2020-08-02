@@ -1,0 +1,15 @@
+## location sudo nano /etc/supervisor/conf.d/blogapp.conf
+## after saving the file sudo supervisorctl reload
+
+[program:blogapp]
+directory=/home/aakash/BlogApp
+#for venv
+#command=/home/aakash/BlogApp/venv/bin/gunicorn -w 3 run:app #full path of gunicorn
+command=/home/aakash/miniconda3/envs/mlapp/bin/gunicorn -w 3 run:app
+user=aakash
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+stderr_logfile=/var/log/blogapp/flaskblog.err.log
+stdout_logfile=/var/log/blogapp/flaskblog.out.log

@@ -41,3 +41,21 @@ s = Serializer('secret', 30) --create Serializer with secret key 'secret' with e
 >>> token
 'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU5MzkwNzI5OCwiZXhwIjoxNTkzOTA3MzI4fQ.eyJ1c2VyX2lkIjoxfQ.joUgpyXZhJq4Ec6DZIWPNHRyII4vWyMxWb3RtAdgMS5xjbqqdQ4Kfr1zEtWdfXPqXAuHa0jXs-8mmIryaOxJVw'
 s.loads(token) --gives back user_id:1 if loaded within 30 secs
+12. Deploy the app - on an ubuntu server
+    -- set up config in json, yaml, or os environ in /etc folder
+    -- install nginx (sudo apt install nginx) and gunicorn
+    -- remove default nginx conf- sudo rm /etc/nginx/sites-enabled/default
+    -- create new file sudo nano - sudo nano /etc/nginx/sites-enabled/blogapp
+    -- get ip address - 172.24.3.85 (hostname -I)
+    -- open port 80 - sudo ufw allow http/tcp
+    -- to delete sudo ufw delete allow 5000
+    -- restart nginx - sudo systemctl restart nginx (on wsl sudo service restart nginx)
+    -- open app in public ip - will serve static files
+    -- now run gunicorn in the same directory of app - gunicorn -w 3 run:app
+    - check number pf cores - nproc --all
+    -- to run the app all time, auto restarts, monitor gunicorn - use supervisor
+    -- sudo apt install supervisor and add conf file at sudo nano /etc/supervisor/conf.d/blogapp.conf
+    -- create the log files described in supervisor file using mkdir -p and sudo touch
+    -- restart supervisor - sudo supervisorctl reload - in WSL - sudo service supervisor restart,  sudo supervisord and  sudo supervisorctl reread and sudo supervisorctl reload
+    --to stop the supervisor app -- sudo supervisorctl stop blogapp
+    -- change nginx conf for e.g. to change default setting of image upload max size of 2 MB - /etc/nginx/nginx.conf

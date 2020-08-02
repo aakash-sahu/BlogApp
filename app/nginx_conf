@@ -1,0 +1,22 @@
+## Location /etc/nginx/sites-enabled/blogapp
+## setup static for static files such a css, js, images, etc.
+## pass on the python traffic to gunicorn which runs on port 8000
+server {
+        listen 80;
+        server_name 172.24.3.85;
+
+        location /static {
+                alias /home/aakash/BlogApp/app/static;
+        }
+
+        location / {
+                proxy_pass http://localhost:8000;
+                include /etc/nginx/proxy_params;
+                proxy_redirect off;
+        }
+
+}
+
+## for image upload size option update the following file -
+/etc/nginx/nginx.conf
+under the http option add variable - client_max_body_size 5M;
