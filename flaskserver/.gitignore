@@ -2,3 +2,5 @@ __pycache__
 site.db
 .ipynb_checkpoints
 digit.png
+__pycache__
+../__pycache__
