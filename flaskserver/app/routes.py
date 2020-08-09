@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+from app.utils import create_ticker_data
 # from statsmodels.tsa.arima_model import ARIMA, ARMA
 # from flask_cors import cross_origin
 import pmdarima as pmd
@@ -64,18 +65,19 @@ def upload_file():
         file = request.files['file']
         f_name, f_ext = os.path.splitext(file.filename)
         data = pd.read_csv(file)
-        data.rename(columns = {"Adj Close": 'adj_close'}, inplace=True)
-        data.columns = data.columns.str.lower()
-        data['ticker'] = f_name
-        print(data.head(2))
-        data.to_sql(name='ticker', con=db.engine, index=False, if_exists ='append')
-        df = pd.read_sql("select * from ticker", con=db.engine)
+        # data.rename(columns = {"Adj Close": 'adj_close'}, inplace=True)
+        # data.columns = data.columns.str.lower()
+        # data['ticker'] = f_name
+        # print(data.head(2))
+        # data.to_sql(name='ticker', con=db.engine, index=False, if_exists ='append')
+        df = create_ticker_data(f_name, data)
+        df.to_sql(name='ticker_data', con=db.engine, index=False, if_exists ='append')
         response = {'success': True,'ticker':f_name, 'message': f'Saved {df.shape} records to database'}
         return jsonify(response)
 
 @app.route('/get_tickers')
 def get_tickers():
-    df = pd.read_sql("select distinct ticker from ticker", con=db.engine)
+    df = pd.read_sql("select distinct ticker from ticker_data", con=db.engine)
     tickers = df.ticker.tolist()
     response = {'success': True, 'tickers': tickers}
     return jsonify(response)
@@ -83,8 +85,10 @@ def get_tickers():
 @app.route('/get_data/<string:ticker>')
 def get_data(ticker):
     print(ticker)
-    df = pd.read_sql(f"select * from ticker where ticker ='{ticker}' order by date desc", con=db.engine)
+    df = pd.read_sql(f"select * from ticker_data where ticker ='{ticker}' order by date desc", con=db.engine)
     df = df[['ticker','date', 'open','close','volume']]
+    df['date'] = pd.to_datetime(df['date'])
+    df['date'] = df['date'].dt.strftime("%Y-%m-%d")
     print(df.shape)
     # df['type'] = 'Actual'
     # df = add_predictions(df)
@@ -99,8 +103,10 @@ def get_data(ticker):
 # @cross_origin()
 def get_predictions(ticker):
     print(ticker)
-    df = pd.read_sql(f"select * from ticker where ticker ='{ticker}' order by date desc", con=db.engine)
+    df = pd.read_sql(f"select * from ticker_data where ticker ='{ticker}' order by date desc", con=db.engine)
     df = df[['ticker','date', 'open','close','volume']]
+    df['date'] = pd.to_datetime(df['date'])
+    df['date'] = df['date'].dt.strftime("%Y-%m-%d")
     print(df.shape)
     df['type'] = 'Actual'
     df = add_predictions(df)

@@ -1,0 +1,41 @@
+version: '3.0'
+
+services:
+  flaskserver:
+    restart: always
+    container_name: flaskserver
+    build: ./flaskserver/
+    volumes:
+      - ./flaskserver/:/flaskserver
+    ports:
+      - "5000:5000"
+  
+  reactclient:
+    restart: always
+    container_name: reactclient
+    build: ./JS/react/blogapp/
+    volumes:
+        - ./JS/react/blogapp/:/reactclient/
+        - /reactclient/node_modules
+    ports:
+      - "3001:3001"
+    stdin_open: true
+
+  expressserver:
+    restart: always
+    container_name: expressserver
+    build: ./JS/blogserverexpress/
+    volumes:
+    - ./JS/blogserverexpress/:/expressserver
+    - /expressserver/node_modules
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+
+  mongo:
+    restart: always
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"

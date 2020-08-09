@@ -44,6 +44,7 @@ usersRouter.get('/', function(req, res, next) {
   res.end('respond with a resource');
 });
 
+//format - {"username":"test", "password": "test", "email": "test@blog.com"}
 usersRouter.post('/register', (req, res, next) => {
   var newUser = new User({username: req.body.username, email: req.body.email});
   User.register(newUser, req.body.password, (err, user) => {
