@@ -25,16 +25,21 @@ def get_preds(x, num_days):
     # model = ARMA(x, order=(2,5))
     # model = model.fit(disp=-1)
     # return model.forecast(num_days)[0]
-    model = pmd.auto_arima(x, start_p=1, start_q=1, test="adf", seasonal=False, error_action="ignore")
+    # model = pmd.auto_arima(x, start_p=1, start_q=1, test="adf", seasonal=False, error_action="ignore")
+    model = pmd.auto_arima(x, start_p=1, start_q=1, max_p=3, max_q=3, m=12,
+                            start_P=0, seasonal=False, d=1, D=1, trace=True,
+                            error_action='ignore', # to hide erros if an order does not work
+                            suppress_warnings=True, # to hide convergence warnings
+                            stepwise=True, test='adf')
     return model.predict(30).tolist()
 
 
 def add_predictions(input_df):
     last_date = pd.to_datetime(input_df.date.max())
     predict_date_range = pd.date_range(start=last_date+pd.tseries.offsets.BDay(1), periods=30, freq='B')
-    close_preds = get_preds(input_df.close.values, 30)
-    volume_preds = np.round(get_preds(input_df.volume.values, 30),0)
-    open_preds = get_preds(input_df.open.values, 30)
+    close_preds = get_preds(input_df.close.astype(np.float64), 30)
+    volume_preds = np.round(get_preds(input_df.volume.astype(np.float64), 30),0)
+    open_preds = get_preds(input_df.open.astype(np.float64), 30)
     df_output = pd.DataFrame({
         'ticker':input_df.ticker.values[1],
         'date': predict_date_range,
@@ -103,7 +108,7 @@ def get_data(ticker):
 # @cross_origin()
 def get_predictions(ticker):
     print(ticker)
-    df = pd.read_sql(f"select * from ticker_data where ticker ='{ticker}' order by date desc", con=db.engine)
+    df = pd.read_sql(f"select * from ticker_data where ticker ='{ticker}' order by date", con=db.engine)
     df = df[['ticker','date', 'open','close','volume']]
     df['date'] = pd.to_datetime(df['date'])
     df['date'] = df['date'].dt.strftime("%Y-%m-%d")
@@ -111,6 +116,7 @@ def get_predictions(ticker):
     df['type'] = 'Actual'
     df = add_predictions(df)
     df = df.round(2)
+    df.sort_values(by='date', ascending=False, inplace=True)
     print(df.head(2))
     output = df.to_json(orient="records")
     # predictions = predict_df[['ticker','date', 'open','close','volume']].to_json(orient="records")

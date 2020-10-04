@@ -135,13 +135,13 @@ class Header extends Component {
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem>
-                                            <NavLink to="/models" className="text-decoration-none">Stock Charts &amp; Prediction</NavLink>
+                                            <NavLink to="/models" className="text-primary nav-link">Stock Charts &amp; Prediction</NavLink>
                                         </DropdownItem>
                                         <DropdownItem>
-                                            <NavLink to="/char-model" className="text-decoration-none">Text Generator</NavLink>
+                                            <NavLink to="/char-model" className="text-primary nav-link">Text Generator</NavLink>
                                         </DropdownItem>
                                         <DropdownItem>
-                                            <NavLink to="/digit-recog" className="text-decoration-none">Digit Recognition</NavLink>
+                                            <NavLink to="/digit-recog" className="text-primary nav-link">Digit Recognition</NavLink>
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledDropdown>                                    
