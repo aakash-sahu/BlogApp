@@ -51,13 +51,14 @@ def keywordextract_saved(sentence, pred_type="prod", device="cpu"):
             if j==1 or j==0:
                 keyword = tokenizer.convert_ids_to_tokens(tokens_tensor[0].to('cpu').numpy())[k]
                 keyword_type = tags_vals[j]
-                keyword_token = [(keyword, keyword_type)]
+                keyword_token = keyword + ': ' + keyword_type
                 if pos_num+1 == k:
-                    final_topics[-1].append((keyword, keyword_type))
+                    # final_topics[-1].append((keyword, keyword_type))
+                    final_topics[-1] = final_topics[-1] + ', '+ keyword + ': ' + keyword_type
                 else:
                     final_topics.append(keyword_token)
                 pos_num = k
-        return final_topics
+        return ' '.join([f for f in final_topics])
         # logic can be simplified by putting if condition on pred type inside the for loop
     
 

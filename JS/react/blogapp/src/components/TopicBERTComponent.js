@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 
 function RenderOutput({output, predType}) {
 
-    if (predType==='' | output.length ==0) {
+    if (predType==='' | output.length ===0) {
         return (
             <div></div>
         )
@@ -29,7 +29,7 @@ function RenderOutput({output, predType}) {
                 <Label for="inputTopics">(Optional) Add additional topics here separated by comma</Label>
                 <Input placeholder={'Placeholder for user to optionally add additional topics for the input'}/>
             </FormGroup>
-            <Button type="submit" value="submit" color="secondary" className="">Submit Feedback</Button>
+            <Button type="submit" value="submit" color="secondary" className="" onClick={() => alert("Your feedback has been submitted!!")}>Submit Feedback</Button>
             </>
         )
     }
@@ -41,7 +41,7 @@ function RenderOutput({output, predType}) {
                 <tr key ={key}>
                 <td>{data.SentenceNum}</td>
                 <td>{data.Sentence}</td>
-                <td>{JSON.stringify(data.KeyphraseAndTag)}</td>
+                <td>{data.KeyphraseAndTag}</td>
             </tr>
             )
         })
