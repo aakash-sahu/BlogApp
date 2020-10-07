@@ -4,3 +4,4 @@ site.db
 digit.png
 __pycache__
 ../__pycache__
+pytorch_model.bin

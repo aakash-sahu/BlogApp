@@ -9,14 +9,17 @@ import matplotlib.pyplot as plt
 from app.utils import create_ticker_data
 # from statsmodels.tsa.arima_model import ARIMA, ARMA
 # from flask_cors import cross_origin
-import pmdarima as pmd
-from .ML.char_pred import get_char_predictions, load_model
-# load model
-model = load_model(os.path.join(os.getcwd(),'app', 'ML','rnn_20_epoch_cp.net'))
+# import pmdarima as pmd
+# from .ML.char_pred import get_char_predictions, load_model
+# # load model
+# model = load_model(os.path.join(os.getcwd(),'app', 'ML','rnn_20_epoch_cp.net'))
 
-# CNN digit model
-from .ML.digit_pred import load_cnn_model, cnn_digit_predictions
-digit_cnn = load_cnn_model(os.path.join(os.getcwd(),'app', 'ML','mnist_cnn_as.pt'))
+# # CNN digit model
+# from .ML.digit_pred import load_cnn_model, cnn_digit_predictions
+# digit_cnn = load_cnn_model(os.path.join(os.getcwd(),'app', 'ML','mnist_cnn_as.pt'))
+
+## BERT Topic model
+from .ML.topic_bert import get_topic_pred
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 ALLOWED_EXTENSIONS = {'txt', 'csv'}
@@ -143,4 +146,16 @@ def digit_recog():
         pred = cnn_digit_predictions(digit_cnn, image)
         print(pred)
         response = {'success':True, 'pred':pred}
+        return jsonify(response)
+
+
+@app.route('/topic_bert', methods=['POST'])
+def topic_bert():
+    if request.method == "POST":
+        input_text = request.json['text']
+        pred_type = request.json.get("pred_type", "validation") # options are validation and prod
+        print(pred_type)
+        predictions = get_topic_pred(input_text, pred_type)
+        response = {'success':True, 'pred':predictions}
+        print(response)
         return jsonify(response)

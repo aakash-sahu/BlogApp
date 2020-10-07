@@ -143,6 +143,9 @@ class Header extends Component {
                                         <DropdownItem>
                                             <NavLink to="/digit-recog" className="text-primary nav-link">Digit Recognition</NavLink>
                                         </DropdownItem>
+                                        <DropdownItem>
+                                            <NavLink to="/keyphrase-extract" className="text-primary nav-link">Keyphrase Extraction with BERT</NavLink>
+                                        </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledDropdown>                                    
                             </Nav>

@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { fetchPosts, registerUser, loginUser, logoutUser, showAlert, dismissAlert, updateUserAccount, submitPost,
         submitUpdatePost, submitDeletePost } from '../redux/ActionCreators';
 import Board from './DigitRecogComponent';
+import KeyphraseExtract from './TopicBERTComponent';
 
 const mapStateToProps = state => {
     return {
@@ -136,6 +137,7 @@ class Main extends Component {
                     <Route exact path = '/models' component={() => <Models isAuthenticated={this.props.login.isAuthenticated}/>} />
                     <Route exact path = '/char-model' component={CharLSTM} />
                     <Route exact path = '/digit-recog' component={Board} />
+                    <Route exact path = '/keyphrase-extract' component={KeyphraseExtract} />
                     <Redirect to="/home" />
                 </Switch>
             </div>
