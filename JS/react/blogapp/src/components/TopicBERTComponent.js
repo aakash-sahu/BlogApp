@@ -5,7 +5,13 @@ import { TickerLoading } from './LoadingComponent';
 import { Formik } from 'formik';
 
 function RenderOutput({output, predType}) {
-    if (predType === "prod") {
+
+    if (predType==='' | output.length ==0) {
+        return (
+            <div></div>
+        )
+    }
+    else if (predType === "prod" & output.length >0) {
         const renderProdOutput = output.map((data, key) => {
             return (
                 // <li key={key}>{data}</li>
@@ -27,7 +33,7 @@ function RenderOutput({output, predType}) {
             </>
         )
     }
-    if (predType === "validation") {
+    else if (predType === "validation" & output.length >0) {
         output = JSON.parse(output);
         console.log(output, typeof(output));
         const renderValidationOutput = output.map((data, key) => {
@@ -58,22 +64,25 @@ function RenderOutput({output, predType}) {
             </>
         )
     }
+
 };
 
 //creating this page using react hooks
 export default function KeyphraseExtract() {
 
-    const [inputText, setInputText] = useState("");
-    const [predType, setPredType] =useState("prod");
+    //if I put both predtype and output in the same state component, won't have to set the state to null in the handleFormSubmit function
+    // I think since state changes at different times, the RenderOutput function is giving error.. or could put more proper conditions in the render function..
+    const [predType, setPredType] =useState("");
     const [output, setOutput] = useState([]);
     const [showSpinner, setSpinner] = useState(false);
 
-    function handleSubmit(event) {
-        event.preventDefault();
-        console.log(event.values);
-        const input = {pred_type: predType, text:inputText };
+    function handleFormSubmit(values, actions) {
+        // console.log(JSON.stringify(values));
+        const input = {pred_type: values.predOptions, text:values.inputText};
+        setOutput('');
+        setPredType('');
+        console.log(input);
         setSpinner(true);
-        console.log(input)
         fetch(baseUrl2 + 'topic_bert', {
             method: 'POST',
             headers: {
@@ -83,55 +92,61 @@ export default function KeyphraseExtract() {
         })
         .then(response => response.json())
         .then(response => {
+            console.log(response);
             setSpinner(false);
-            setOutput(response.pred)
+            setOutput(response.pred);
+            setPredType(values.predOptions);
             return response;
         })
-        .then((output) => console.log(output))
+        .then((output) => {
+
+            actions.setSubmitting(false);
+        })
         .catch(err => console.log(err))
         
     };
-
-    function handleRadioButtons(predValue) {
-        if (output.length >0 ) {
-            setPredType(predValue);
-            handleSubmit(new Event('placeholder'));
-        }
-        else if (output.length ===0 ){
-            setPredType(predValue);
-        }
-    }
 
     return (
         <div className="container">
             <div className="row">
                 <div className="col-12 col-md-8 offset-md-2">
-                    <Form onSubmit={handleSubmit}>
-                        <h3>Keyphrase Extraction Using Fine-tuned BERT</h3>
-                        <p>BERT base pre-trained model fine tuned on SemEval 2010 data for topic extraction from research papers.</p>
-                        <FormGroup>
-                            <Label for="inputText" className="font-weight-bold">Input</Label>
-                            <Input type="textarea" name="inputText" id="inputText" value= {inputText} 
-                            onChange={(event) => setInputText(event.target.value)} rows="10" placeholder="Input text for topic extraction here..." />
-                        </FormGroup>
-                        <FormGroup>
-                            <h5>Prediction Type</h5>
-                            <ButtonGroup>
-                                <Button color="primary" onClick={() => handleRadioButtons("prod")} active={predType==="prod"}>Prod</Button>
-                                <Button color="primary" onClick={() => handleRadioButtons("validation")} active={predType==="validation"}>Validation</Button>
-                            </ButtonGroup>
-                            {/* <ButtonGroup>
-                                <Label className="btn">
-                                    <Input type="radio" name="options" checked /> Prod
-                                </Label>
-                                <Label className="btn">
-                                    <Input type="radio" name="options" /> Validation
-                                </Label>                             
-                            </ButtonGroup>                             */}
-                        </FormGroup>
-                        <Button type="submit" value="submit" outline color="primary" className="">Submit</Button>
-                        {showSpinner ? <TickerLoading msg={"Getting key phrases..."}/>:null }
-                    </Form>
+                    <h3>Keyphrase Extraction Using Fine-tuned BERT</h3>
+                    <p>BERT base pre-trained model fine tuned on SemEval 2010 data for topic extraction from research papers.</p>
+                    <Formik
+                        initialValues={{inputText:'', predOptions:'' }}
+                        onSubmit={handleFormSubmit}>
+                            {
+                                (props) => {
+                                    const {values, handleSubmit, isSubmitting, handleChange, setFieldValue} = props;
+                                    return (
+                                        <Form onSubmit={handleSubmit}>
+                                            <FormGroup>
+                                                <Label for="inputText" className="font-weight-bold">Input</Label>
+                                                <Input type="textarea" name="inputText" id="inputText" value= {values.inputText} 
+                                                onChange={handleChange} rows="10" placeholder="Input text for topic extraction here..." />
+                                            </FormGroup>
+                                            <FormGroup>
+                                                <h5>Prediction Type</h5>
+                                                {/* <ButtonGroup>
+                                                    <Button color="primary" onClick={() => handleRadioButtons("prod")} active={predType==="prod"}>Prod</Button>
+                                                    <Button color="primary" onClick={() => handleRadioButtons("validation")} active={predType==="validation"}>Validation</Button>
+                                                </ButtonGroup> */}
+                                                <ButtonGroup>
+                                                    <Label check className="btn">
+                                                        <Input type="radio" name="predOptions" value="prod" checked={values.predOptions === 'prod'} onChange={() => setFieldValue("predOptions", "prod")} /> Prod
+                                                    </Label>
+                                                    <Label check className="btn">
+                                                        <Input type="radio" name="predOptions" value="validation" checked={values.predOptions === 'validation'} onChange={() => setFieldValue("predOptions", "validation")}/> Validation
+                                                    </Label>                             
+                                                </ButtonGroup>                            
+                                            </FormGroup>
+                                            <Button type="submit" value="submit" outline color="primary" disabled={isSubmitting}>Submit</Button>
+                                            {showSpinner ? <TickerLoading msg={"Getting key phrases..."}/>:null }
+                                        </Form>
+                                    )
+                                }
+                            }
+                        </Formik>
                 </div>
             </div>
             <div className="row mb-5">
